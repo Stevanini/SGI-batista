@@ -6,7 +6,7 @@ export default function SiteLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <div className="min-w-[640px]">
       <Header />
       {children}
     </div>
