@@ -1,0 +1,21 @@
+{
+  "Functional Component": {
+    "scope": "javascript,typescript,typescriptreact,javascriptreact",
+    "prefix": "rfc",
+    "body": [
+      "const ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}}:React.FC = () => {",
+      "  return (",
+      "    <h1>Hello World</h1>",
+      "  );",
+      "}",
+      "",
+      "export default ${1:${TM_DIRECTORY/^.*(\\/|\\\\)([^(\\/|\\\\)]+)$/$2/}};",
+    ],
+    "description": "Cria um componente funcional",
+  },
+  "Origin pronouns": {
+    "scope": "javascript,typescript,typescriptreact,javascriptreact",
+    "prefix": "pronouns",
+    "body": ["`${origin.pronoun === 'male' ? 'o' : 'a'} ${origin.name}`"],
+  },
+}
