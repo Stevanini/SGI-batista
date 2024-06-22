@@ -1,5 +1,5 @@
-import { ISignInRequest, ISignInResponse } from '@interfaces/interface.auth';
-import { IHttpClient } from '../interfaces/interface.httpClient';
+import { ISignInRequest, ISignInResponse } from '~/interfaces/interface.auth';
+import { IHttpClient } from '~/interfaces/interface.httpClient';
 
 export class AuthService {
   private httpClient: IHttpClient;
