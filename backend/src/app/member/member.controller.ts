@@ -9,7 +9,7 @@ export class MemberController {
 
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
-    return this.memberService.create(createMemberDto);
+    return this.memberService.create(createMemberDto, "");
   }
 
   @Get()

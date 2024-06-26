@@ -13,14 +13,15 @@ export class MemberService {
     private membersRepository: Repository<Member>,
   ) { }
 
-  create(createMemberDto: CreateMemberDto): Promise<Member> {
+  create(createMemberDto: CreateMemberDto, createdBy: string): Promise<Member> {
     const { name, email } = createMemberDto;
 
     const newMember = new Member();
     newMember.id = uuidv4(); // Gerar UUID aleatório
     newMember.name = name;
     newMember.email = email;
-
+    newMember.createdBy = createdBy;
+    newMember.updatedBy = createdBy;
     return this.membersRepository.save(newMember);
   }
 
