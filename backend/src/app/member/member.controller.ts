@@ -1,15 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
+import { AdvancedSecurity } from '@shared/decorators/security.decorator';
+import { IsPublic } from '@shared/decorators/is-public.decorator';
 
 @Controller('members')
+// @AdvancedSecurity()
 export class MemberController {
-  constructor(private readonly memberService: MemberService) { }
+  constructor(private readonly memberService: MemberService) {}
 
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
-    return this.memberService.create(createMemberDto, "");
+    return this.memberService.create(createMemberDto, '');
   }
 
   @Get()

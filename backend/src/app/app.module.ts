@@ -8,6 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MemberModule } from '@app/member/member.module';
 import { PermissionModule } from '@app/permission/permission.module';
 import { RoleModule } from '@app/role/role.module';
+import { AuthModule } from './auth/auth.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -31,12 +33,13 @@ import { RoleModule } from '@app/role/role.module';
       }),
       inject: [ConfigService],
     }),
+    CoreModule,
     MemberModule,
     PermissionModule,
     RoleModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
-export class AppModule { }
+export class AppModule {}
