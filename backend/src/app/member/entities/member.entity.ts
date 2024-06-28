@@ -1,16 +1,10 @@
+import { USER_STATUS } from '@/src/shared/constants/user.constants';
 import { SGIBaseEntity } from '@app/core/entities/sgi-base-entity';
 import { Permission } from '@app/permission/entities/permission.entity';
 import { Role } from '@app/role/entities/role.entity';
 import { Exclude } from 'class-transformer';
-import {
-  Entity,
-  Column,
-  ManyToMany,
-  JoinTable,
-  BeforeInsert,
-  BeforeUpdate,
-} from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class Member extends SGIBaseEntity {
@@ -35,17 +29,10 @@ export class Member extends SGIBaseEntity {
   @JoinTable()
   roles: Role[];
 
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword() {
-    // Só faz hash da senha se ela foi modificada
-    if (this.password) {
-      const salt = await bcrypt.genSalt();
-      this.password = await bcrypt.hash(this.password, salt);
-    }
-  }
-
-  validatePassword(password: string): boolean {
-    return bcrypt.compareSync(password, this.password);
+  constructor(partial: Partial<Member>) {
+    super();
+    Object.assign(this, partial);
+    this.id = this.id || uuidv4();
+    this.status = this.status || USER_STATUS.WAITING_ID;
   }
 }

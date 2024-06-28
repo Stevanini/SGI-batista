@@ -18,14 +18,16 @@ import { Repository } from 'typeorm';
 import { Member } from '../member/entities/member.entity';
 import { LoginRequestBody } from './dto/login.dto';
 import { PasswordService } from '@app/core/services/password.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Member)
-    private membersRepository: Repository<Member>,
+    private readonly membersRepository: Repository<Member>,
     private readonly jwtService: JwtService,
-    private passwordService: PasswordService,
+    private readonly passwordService: PasswordService,
+    private readonly configService: ConfigService,
   ) {}
 
   async login(body: LoginRequestBody): Promise<UserToken> {
@@ -66,15 +68,20 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.findAuthUserByEmail(email);
 
-    var p = await this.passwordService.hashPassword(password);
-
     if (user) {
       this.validateSignStatus(user);
-      const isPasswordValid = await this.passwordService.validatePassword(
+      const isPasswordValid = await this.passwordService.verify(
         password,
         user.password,
       );
-      console.log('validateUser', isPasswordValid, user.password, password, p);
+
+      console.log(
+        'validateUser',
+        isPasswordValid,
+        user.password,
+        password,
+        this.passwordService.decrypt(user.password),
+      );
 
       if (isPasswordValid)
         return {

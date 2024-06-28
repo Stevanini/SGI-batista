@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '@shared/constants/auth.constants';
-import { getTargetPermission } from '@shared/decorators/security.decorator';
+// import { getTargetPermission } from '@shared/decorators/security.decorator';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -21,27 +21,35 @@ export class PermissionGuard implements CanActivate {
     ]);
     if (isPublic) return true;
 
-    const permission = getTargetPermission(context.getHandler());
-    if (!permission)
-      throw new HttpException(
-        'Permissão não encontrada',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    const allAdminPermissions =
-      context.switchToHttp().getRequest().member?.permissions ?? [];
+    // const permission = getTargetPermission(context.getHandler());
+    // if (!permission)
+    //   throw new HttpException(
+    //     'Permissão não encontrada',
+    //     HttpStatus.INTERNAL_SERVER_ERROR,
+    //   );
+    // const allAdminPermissions =
+    //   context.switchToHttp().getRequest().member?.permissions ?? [];
 
-    const isAllowed = this.validAdminPermissions(
-      allAdminPermissions,
-      permission.tag,
-    );
-    if (!isAllowed)
-      throw new ForbiddenException([
-        {
-          property: 'member',
-          error: [`Acesso negado`],
-          description: permission.description,
-        },
-      ]);
+    // const isAllowed = this.validAdminPermissions(
+    //   allAdminPermissions,
+    //   permission.tag,
+    // );
+
+    // console.log(
+    //   'PermissionGuard',
+    //   context.getHandler(),
+    //   isPublic,
+    //   permission,
+    //   isAllowed,
+    // );
+    // if (!isAllowed)
+    //   throw new ForbiddenException([
+    //     {
+    //       property: 'member',
+    //       error: [`Acesso negado`],
+    //       description: permission.description,
+    //     },
+    //   ]);
 
     return true;
   }

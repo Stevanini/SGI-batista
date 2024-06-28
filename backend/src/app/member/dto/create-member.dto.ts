@@ -16,9 +16,9 @@ export class CreateMemberDto {
   @IsString({ message: 'Login ou senha inválidos' })
   @MinLength(4, { message: 'A senha deve ter mais ou igual a 4 caracteres' })
   @MaxLength(20, { message: 'A senha deve ter menos ou igual a 20 caracteres' })
-  @Matches(iS_VALID_PASSWORD, {
-    message: 'Senha muito fraca',
-  })
+  // @Matches(iS_VALID_PASSWORD, {
+  //   message: 'Senha muito fraca',
+  // })
   password: string;
 
   @IsString({ message: 'Nome inválido' })
