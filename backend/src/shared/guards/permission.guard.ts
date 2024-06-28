@@ -1,80 +1,120 @@
 import {
-  CanActivate,
-  ExecutionContext,
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  Injectable,
+    CanActivate,
+    ExecutionContext,
+    ForbiddenException,
+    Injectable,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '@shared/constants/auth.constants';
+import { getTargetPermission } from '../decorators/security.decorator';
+import { JwtService } from '@nestjs/jwt';
+import { EnvironmentVariables } from '@/src/config/env/validation';
+import { ConfigService } from '@nestjs/config';
 // import { getTargetPermission } from '@shared/decorators/security.decorator';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+    constructor(
+        private reflector: Reflector,
+        private jwtService: JwtService,
+        private configService: ConfigService<EnvironmentVariables>,
+    ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    if (isPublic) return true;
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const isPublic =
+            this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+                context.getHandler(),
+                context.getClass(),
+            ]) || false;
+        if (isPublic) return true;
 
-    // const permission = getTargetPermission(context.getHandler());
-    // if (!permission)
-    //   throw new HttpException(
-    //     'Permissão não encontrada',
-    //     HttpStatus.INTERNAL_SERVER_ERROR,
-    //   );
-    // const allAdminPermissions =
-    //   context.switchToHttp().getRequest().member?.permissions ?? [];
+        const request = context.switchToHttp().getRequest();
+        const token = this.extractTokenFromHeader(request);
+        if (!token) {
+            throw new UnauthorizedException();
+        }
 
-    // const isAllowed = this.validAdminPermissions(
-    //   allAdminPermissions,
-    //   permission.tag,
-    // );
+        const secret = this.configService.get('JWT_PRIVATE_KEY', {
+            infer: true,
+        });
+        const payload = await this.jwtService.verifyAsync(
+            token,
+            this.optionsJwt(),
+        );
+        console.log('PermissionGuard', payload);
 
-    // console.log(
-    //   'PermissionGuard',
-    //   context.getHandler(),
-    //   isPublic,
-    //   permission,
-    //   isAllowed,
-    // );
-    // if (!isAllowed)
-    //   throw new ForbiddenException([
-    //     {
-    //       property: 'member',
-    //       error: [`Acesso negado`],
-    //       description: permission.description,
-    //     },
-    //   ]);
+        const memberPermissions = payload?.permissions ?? [];
 
-    return true;
-  }
+        const accessPermission = getTargetPermission(context.getHandler());
+        const isAllowed = this.validAdminPermissions(
+            memberPermissions,
+            accessPermission.tag,
+        );
 
-  private validAdminPermissions(
-    memberPermission: Array<string>,
-    targetPermission: string,
-  ) {
-    return memberPermission.reduce(
-      (hasPermission, currentPermission) =>
-        this.matchPermissions(currentPermission, targetPermission) ||
-        hasPermission,
-      false,
-    );
-  }
+        if (memberPermissions.length == 0 || !isAllowed)
+            throw new ForbiddenException([
+                {
+                    property: 'member',
+                    error: [`Acesso negado`],
+                    description: accessPermission.description,
+                },
+            ]);
+        return true;
+    }
 
-  private matchPermissions(
-    memberPermission: string,
-    targetPermission: string,
-  ): boolean {
-    memberPermission = memberPermission.replace('*', '.*').toLowerCase().trim();
-    targetPermission = targetPermission.toLowerCase().trim();
+    private validAdminPermissions(
+        memberPermission: Array<string>,
+        targetPermission: string,
+    ) {
+        console.log(
+            'validAdminPermissions',
+            memberPermission,
+            targetPermission,
+        );
+        return memberPermission.reduce(
+            (hasPermission, currentPermission) =>
+                this.matchPermissions(currentPermission, targetPermission) ||
+                hasPermission,
+            false,
+        );
+    }
 
-    const regex = new RegExp(`^${memberPermission}$`, 'g');
+    private matchPermissions(
+        memberPermission: string,
+        targetPermission: string,
+    ): boolean {
+        memberPermission = memberPermission
+            .replace('*', '.*')
+            .toLowerCase()
+            .trim();
+        targetPermission = targetPermission.toLowerCase().trim();
 
-    return Boolean(targetPermission.match(regex));
-  }
+        const regex = new RegExp(`^${memberPermission}$`, 'g');
+
+        return Boolean(targetPermission.match(regex));
+    }
+
+    private extractTokenFromHeader(request: any): string | undefined {
+        const [type, token] = request.headers.authorization?.split(' ') ?? [];
+        return type === 'Bearer' ? token : undefined;
+    }
+
+    private optionsJwt() {
+        const privateKey = this.configService.get('JWT_PRIVATE_KEY', {
+            infer: true,
+        });
+        const publicKey = this.configService.get('JWT_PUBLIC_KEY', {
+            infer: true,
+        });
+
+        return {
+            privateKey: Buffer.from(privateKey, 'base64'),
+            publicKey: Buffer.from(publicKey, 'base64'),
+            signOptions: {
+                algorithm: 'RS256',
+                expiresIn: '1d',
+            },
+        };
+    }
 }

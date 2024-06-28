@@ -1,14 +1,14 @@
 import {
-  ForbiddenException,
-  Injectable,
-  UnauthorizedException,
+    ForbiddenException,
+    Injectable,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import {
-  USER_LOGIN_RELEASED,
-  USER_STATUS_LABEL,
+    USER_LOGIN_RELEASED,
+    USER_STATUS_LABEL,
 } from '@shared/constants/user.constants';
 
 import { UserPayload } from './interfaces/user-payload';
@@ -22,92 +22,95 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectRepository(Member)
-    private readonly membersRepository: Repository<Member>,
-    private readonly jwtService: JwtService,
-    private readonly passwordService: PasswordService,
-    private readonly configService: ConfigService,
-  ) {}
+    constructor(
+        @InjectRepository(Member)
+        private readonly membersRepository: Repository<Member>,
+        private readonly jwtService: JwtService,
+        private readonly passwordService: PasswordService,
+        private readonly configService: ConfigService,
+    ) {}
 
-  async login(body: LoginRequestBody): Promise<UserToken> {
-    const user = await this.findAuthUserByEmail(body.email);
-    const email = user.email.toLowerCase();
+    async login(body: LoginRequestBody): Promise<UserToken> {
+        console.log('login', body);
+        await this.validateUser(body.email, body.password);
 
-    const allPermissionOfRoles = user.roles.map((role) =>
-      role.permissions.map((permission) => permission.tag),
-    );
-    const allPermission = user.permissions.map((permission) => permission.tag);
+        const user = await this.findAuthUserByEmail(body.email);
+        const email = user.email.toLowerCase();
 
-    const mergedPermissions = Array.from(
-      new Set(allPermissionOfRoles.concat(allPermission).flat()),
-    );
+        const allPermissionOfRoles = user.roles.map((role) =>
+            role.permissions.map((permission) => permission.tag),
+        );
+        const allPermission = user.permissions.map(
+            (permission) => permission.tag,
+        );
 
-    const payload: UserPayload = {
-      sub: user.id,
-      email,
-      permissions: mergedPermissions,
-    };
+        const mergedPermissions = Array.from(
+            new Set(allPermissionOfRoles.concat(allPermission).flat()),
+        );
 
-    const jwtToken = this.jwtService.sign(payload);
+        const payload: UserPayload = {
+            sub: user.id,
+            email,
+            permissions: mergedPermissions,
+        };
 
-    return {
-      access_token: jwtToken,
-    };
-  }
+        const jwtToken = this.jwtService.sign(payload);
 
-  async isTokenValid(token: string): Promise<boolean> {
-    try {
-      const decodedToken = this.jwtService.verify(token);
-      return !!decodedToken;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async validateUser(email: string, password: string) {
-    const user = await this.findAuthUserByEmail(email);
-
-    if (user) {
-      this.validateSignStatus(user);
-      const isPasswordValid = await this.passwordService.verify(
-        password,
-        user.password,
-      );
-
-      console.log(
-        'validateUser',
-        isPasswordValid,
-        user.password,
-        password,
-        this.passwordService.decrypt(user.password),
-      );
-
-      if (isPasswordValid)
         return {
-          ...user,
-          password: undefined,
+            access_token: jwtToken,
         };
     }
-    throw new UnauthorizedException([
-      { property: 'login', error: ['Endereço de email ou senha inválidos'] },
-    ]);
-  }
 
-  private validateSignStatus(user: Member) {
-    if (USER_LOGIN_RELEASED.includes(user.status)) return;
-    throw new ForbiddenException([
-      {
-        property: 'status',
-        error: [USER_STATUS_LABEL[user.status]],
-      },
-    ]);
-  }
+    async isTokenValid(token: string): Promise<boolean> {
+        console.log('isTokenValid');
+        try {
+            const decodedToken = this.jwtService.verify(token);
+            return !!decodedToken;
+        } catch (error) {
+            return false;
+        }
+    }
 
-  async findAuthUserByEmail(email: string) {
-    return await this.membersRepository.findOne({
-      where: { email: email.toLowerCase() },
-      relations: ['permissions', 'roles', 'roles.permissions'],
-    });
-  }
+    async validateUser(email: string, password: string) {
+        console.log('validateUser');
+        const user = await this.findAuthUserByEmail(email);
+
+        if (user) {
+            this.validateSignStatus(user);
+            const isPasswordValid = await this.passwordService.verify(
+                password,
+                user.password,
+            );
+
+            if (isPasswordValid)
+                return {
+                    ...user,
+                    password: undefined,
+                };
+        }
+        throw new UnauthorizedException([
+            {
+                property: 'login',
+                error: ['Endereço de email ou senha inválidos'],
+            },
+        ]);
+    }
+
+    private validateSignStatus(user: Member) {
+        console.log('validateSignStatus');
+        if (USER_LOGIN_RELEASED.includes(user.status)) return;
+        throw new ForbiddenException([
+            {
+                property: 'status',
+                error: [USER_STATUS_LABEL[user.status]],
+            },
+        ]);
+    }
+
+    async findAuthUserByEmail(email: string) {
+        return await this.membersRepository.findOne({
+            where: { email: email.toLowerCase() },
+            relations: ['permissions', 'roles', 'roles.permissions'],
+        });
+    }
 }
