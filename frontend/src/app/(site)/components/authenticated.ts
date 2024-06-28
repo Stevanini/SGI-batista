@@ -1,5 +1,5 @@
 export const authenticated = () => {
-  const token = localStorage.getItem('@accessTokenTransp');
+  const token = localStorage.getItem('@accessToken');
 
   return !!token;
 };

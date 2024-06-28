@@ -28,13 +28,15 @@ export default function RootLayout({
 
     if (!isAuthenticated) {
       push('/login');
+    } else if (isAuthenticated) {
+      push('/');
     }
-  }, [isUserAuthenticated]);
+  }, [isUserAuthenticated, push]);
 
   return (
-    <html lang="pt">
-      <body className={inter.className}>
-        {/* {!isUserAuthenticated && null}
+    <html lang="pt" className="h-full bg-[#1b1b23]">
+      <body className={`${inter.className} h-full`}>
+        {/* {!isUserAuthenticated && children}
         {isUserAuthenticated && children} */}
         {children}
       </body>
