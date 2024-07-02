@@ -15,6 +15,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentMember } from '../auth/decorators/current-member.decorator';
 import { Member } from './entities/member.entity';
 import { APIInfo } from '@/src/shared/decorators/api-info.decorator';
+import { IsPublic } from '@/src/shared/decorators/is-public.decorator';
 
 @ApiTags('Members')
 @Controller('members')
@@ -28,6 +29,7 @@ export class MemberController {
         description: 'O membro foi criado com sucesso',
     })
     @ApiResponse({ status: 403, description: 'Acesso proibido.' })
+    @IsPublic()
     create(@Body() createMemberDto: CreateMemberDto) {
         return this.memberService.create(createMemberDto, '');
     }
