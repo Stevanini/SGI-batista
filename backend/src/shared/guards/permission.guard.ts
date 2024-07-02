@@ -7,11 +7,10 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '@shared/constants/auth.constants';
-import { getTargetPermission } from '../decorators/security.decorator';
 import { JwtService } from '@nestjs/jwt';
 import { EnvironmentVariables } from '@/src/config/env/validation';
 import { ConfigService } from '@nestjs/config';
-// import { getTargetPermission } from '@shared/decorators/security.decorator';
+import { getTargetPermission } from '@shared/decorators/security.decorator';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -35,14 +34,11 @@ export class PermissionGuard implements CanActivate {
             throw new UnauthorizedException();
         }
 
-        const secret = this.configService.get('JWT_PRIVATE_KEY', {
-            infer: true,
-        });
         const payload = await this.jwtService.verifyAsync(
             token,
             this.optionsJwt(),
         );
-        console.log('PermissionGuard', payload);
+        // console.log('PermissionGuard', payload);
 
         const memberPermissions = payload?.permissions ?? [];
 
@@ -67,11 +63,11 @@ export class PermissionGuard implements CanActivate {
         memberPermission: Array<string>,
         targetPermission: string,
     ) {
-        console.log(
-            'validAdminPermissions',
-            memberPermission,
-            targetPermission,
-        );
+        // console.log(
+        //     'validAdminPermissions',
+        //     memberPermission,
+        //     targetPermission,
+        // );
         return memberPermission.reduce(
             (hasPermission, currentPermission) =>
                 this.matchPermissions(currentPermission, targetPermission) ||

@@ -10,10 +10,11 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import {
     PERMISSION_METADATA_KEY,
     ALL_PERMISSIONS_METADATA_KEY,
-    API_DESCRIPTION_METADATA_KEY,
+    API_INFO_METADATA_KEY,
 } from '@shared/constants/auth.constants';
 import { PermissionGuard } from '@shared/guards/permission.guard';
 import { Permissions } from '@shared/interfaces/permissions.interface';
+import { APIInfoData } from './api-info.decorator';
 const isLocal = process.env.NODE_ENV === 'local';
 
 export const getAllPermissions = (): Array<Permissions> =>
@@ -22,11 +23,11 @@ export const getAllPermissions = (): Array<Permissions> =>
 export const getTargetPermission = (target: any): any =>
     Reflect.getMetadata(PERMISSION_METADATA_KEY, target) || null;
 
-export const getTargetDescription = (target: any): string =>
-    Reflect.getMetadata(API_DESCRIPTION_METADATA_KEY, target) || '';
+export const getTargetInfo = (target: any): APIInfoData =>
+    Reflect.getMetadata(API_INFO_METADATA_KEY, target) || '';
 
 export const addPermission = (permission: any, target: any) => {
-    console.log('addPermission', permission, target);
+    // console.log('addPermission', permission, target);
     Reflect.defineMetadata(PERMISSION_METADATA_KEY, permission, target);
     Reflect.defineMetadata(
         ALL_PERMISSIONS_METADATA_KEY,
@@ -40,14 +41,21 @@ export const SetPermissionName = (): CustomDecorator<string> => {
 
     const decoratorFactory = (target: any, key?: any, descriptor?: any) => {
         if (descriptor) {
-            const description = getTargetDescription(descriptor.value);
+            const apiInfo: APIInfoData = getTargetInfo(descriptor.value);
             const domainName = target.constructor.name
                 .replace('Controller', '')
                 .toLocaleLowerCase();
 
+            // console.log(
+            //     'SetPermissionName:decoratorFactory ',
+            //     target,
+            //     key,
+            //     descriptor,
+            // );
+
             const permissionMethod = {
-                tag: `${domainName}:${key}`,
-                description,
+                tag: `${domainName}:${key}11`,
+                description: apiInfo.description,
             };
             const permissionDomain = {
                 tag: `${domainName}:*`,
@@ -87,10 +95,14 @@ export const SetPermissionName = (): CustomDecorator<string> => {
 
         for (const method of methods) {
             if (method === 'constructor') continue;
-            const description = getTargetDescription(target.prototype[method]);
+
+            const apiInfo: APIInfoData = getTargetInfo(
+                target.prototype[method],
+            );
+
             const permissionMethod = {
-                tag: `${domainName}:${method}`,
-                description,
+                tag: `${domainName}:${apiInfo.name || method}`,
+                description: apiInfo.description,
             };
 
             if (isLocal)
@@ -105,13 +117,13 @@ export const SetPermissionName = (): CustomDecorator<string> => {
 
     decoratorFactory.KEY = PERMISSION_METADATA_KEY;
 
-    console.log('SetPermissionName', decoratorFactory);
+    // console.log('SetPermissionName', decoratorFactory);
 
     return decoratorFactory;
 };
 
 export function AdvancedSecurity() {
-    console.log('AdvancedSecurity');
+    // console.log('AdvancedSecurity');
     return applyDecorators(
         SetPermissionName(),
         UseGuards(PermissionGuard),

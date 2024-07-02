@@ -14,6 +14,7 @@ import { AdvancedSecurity } from '@shared/decorators/security.decorator';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CurrentMember } from '../auth/decorators/current-member.decorator';
 import { Member } from './entities/member.entity';
+import { APIInfo } from '@/src/shared/decorators/api-info.decorator';
 
 @ApiTags('Members')
 @Controller('members')
@@ -52,6 +53,7 @@ export class MemberController {
     }
 
     @Get('/me')
+    @APIInfo({ name: 'me', description: 'Criar um membro' })
     getMe(@CurrentMember() currentUser: Member) {
         return currentUser;
     }

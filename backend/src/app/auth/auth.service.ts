@@ -31,7 +31,7 @@ export class AuthService {
     ) {}
 
     async login(body: LoginRequestBody): Promise<UserToken> {
-        console.log('login', body);
+        // console.log('login', body);
         await this.validateUser(body.email, body.password);
 
         const user = await this.findAuthUserByEmail(body.email);
@@ -62,7 +62,7 @@ export class AuthService {
     }
 
     async isTokenValid(token: string): Promise<boolean> {
-        console.log('isTokenValid');
+        // console.log('isTokenValid');
         try {
             const decodedToken = this.jwtService.verify(token);
             return !!decodedToken;
@@ -72,7 +72,7 @@ export class AuthService {
     }
 
     async validateUser(email: string, password: string) {
-        console.log('validateUser');
+        // console.log('validateUser');
         const user = await this.findAuthUserByEmail(email);
 
         if (user) {
@@ -97,7 +97,7 @@ export class AuthService {
     }
 
     private validateSignStatus(user: Member) {
-        console.log('validateSignStatus');
+        // console.log('validateSignStatus');
         if (USER_LOGIN_RELEASED.includes(user.status)) return;
         throw new ForbiddenException([
             {
