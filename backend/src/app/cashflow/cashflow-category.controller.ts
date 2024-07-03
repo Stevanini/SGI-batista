@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateCashFlowCategoryDto } from './dto/cashflow-category.dto';
 import { CashFlowCategoryService } from './cashflow-category.service';
 
-@ApiTags('CashflowsCategory')
+@ApiTags('Cashflows Category')
 @Controller('cashflow-categories')
 @AdvancedSecurity()
 export class CashFlowCategoryController {
