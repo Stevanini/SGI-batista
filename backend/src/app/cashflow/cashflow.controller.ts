@@ -8,8 +8,7 @@ import {
     Delete,
 } from '@nestjs/common';
 import { CashflowService } from './cashflow.service';
-import { CreateCashflowDto } from './dto/create-cashflow.dto';
-import { UpdateCashflowDto } from './dto/update-cashflow.dto';
+import { CreateCashflowDto, UpdateCashflowDto } from './dto/cashflow.dto';
 import { AdvancedSecurity } from '@/src/shared/decorators/security.decorator';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -20,8 +19,8 @@ export class CashflowController {
     constructor(private readonly cashflowService: CashflowService) {}
 
     @Post()
-    create(@Body() createCashflowDto: CreateCashflowDto) {
-        return this.cashflowService.create(createCashflowDto);
+    create(@Body() dto: CreateCashflowDto) {
+        return this.cashflowService.create(dto, 'API');
     }
 
     @Get()

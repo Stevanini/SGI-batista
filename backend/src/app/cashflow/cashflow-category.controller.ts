@@ -1,8 +1,13 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CashFlowCategory } from './entities/cashflow-category.entity';
-import { CashFlowCategoryService } from './cashflow-type.service';
+import { AdvancedSecurity } from '@/src/shared/decorators/security.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import { CreateCashFlowCategoryDto } from './dto/cashflow-category.dto';
+import { CashFlowCategoryService } from './cashflow-category.service';
 
-@Controller('cashflow')
+@ApiTags('CashflowsCategory')
+@Controller('cashflow-categories')
+@AdvancedSecurity()
 export class CashFlowCategoryController {
     constructor(
         private readonly cashFlowTypeService: CashFlowCategoryService,
@@ -10,9 +15,9 @@ export class CashFlowCategoryController {
 
     @Post()
     async create(
-        @Body() typeData: Partial<CashFlowCategory>,
-    ): Promise<CashFlowCategory> {
-        return this.cashFlowTypeService.create(typeData);
+        @Body() category: CreateCashFlowCategoryDto,
+    ): Promise<CreateCashFlowCategoryDto> {
+        return this.cashFlowTypeService.create(category, 'API');
     }
 
     @Get()

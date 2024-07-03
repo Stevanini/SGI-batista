@@ -27,7 +27,7 @@ export const getTargetInfo = (target: any): APIInfoData =>
     Reflect.getMetadata(API_INFO_METADATA_KEY, target) || '';
 
 export const addPermission = (permission: any, target: any) => {
-    console.log('addPermission', permission, target);
+    // console.log('addPermission', permission, target);
     Reflect.defineMetadata(PERMISSION_METADATA_KEY, permission, target);
     Reflect.defineMetadata(
         ALL_PERMISSIONS_METADATA_KEY,
@@ -40,24 +40,24 @@ export const SetPermissionName = (): CustomDecorator<string> => {
     const logger = new Logger('AdvancedSecurity');
 
     const decoratorFactory = (target: any, key?: any, descriptor?: any) => {
-        console.log(
-            'SetPermissionName: decoratorFactory',
-            target,
-            key,
-            descriptor,
-        );
+        // console.log(
+        //     'SetPermissionName: decoratorFactory',
+        //     target,
+        //     key,
+        //     descriptor,
+        // );
         if (descriptor) {
             const apiInfo: APIInfoData = getTargetInfo(descriptor.value);
             const domainName = target.constructor.name
                 .replace('Controller', '')
                 .toLocaleLowerCase();
 
-            console.log(
-                'SetPermissionName:decoratorFactory ',
-                target,
-                key,
-                descriptor,
-            );
+            // console.log(
+            //     'SetPermissionName:decoratorFactory ',
+            //     target,
+            //     key,
+            //     descriptor,
+            // );
 
             const permissionMethod = {
                 tag: `${domainName}:${apiInfo.name || key}`,
@@ -123,7 +123,7 @@ export const SetPermissionName = (): CustomDecorator<string> => {
 
     decoratorFactory.KEY = PERMISSION_METADATA_KEY;
 
-    console.log('SetPermissionName', decoratorFactory);
+    // console.log('SetPermissionName', decoratorFactory);
 
     return decoratorFactory;
 };

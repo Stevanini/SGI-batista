@@ -70,11 +70,11 @@ export class PermissionGuard implements CanActivate {
         memberPermission: Array<string>,
         targetPermission: string,
     ) {
-        console.log(
-            'validAdminPermissions',
-            memberPermission,
-            targetPermission,
-        );
+        // console.log(
+        //     'validAdminPermissions',
+        //     memberPermission,
+        //     targetPermission,
+        // );
         return memberPermission.reduce(
             (hasPermission, currentPermission) =>
                 this.matchPermissions(currentPermission, targetPermission) ||
@@ -87,7 +87,7 @@ export class PermissionGuard implements CanActivate {
         memberPermission: string,
         targetPermission: string,
     ): boolean {
-        console.log('matchPermissions', memberPermission, targetPermission);
+        // console.log('matchPermissions', memberPermission, targetPermission);
         memberPermission = memberPermission
             .replace('*', '.*')
             .toLowerCase()

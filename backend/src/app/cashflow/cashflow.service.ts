@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateCashflowDto } from './dto/update-cashflow.dto';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../member/entities/member.entity';
 import { CashFlow } from './entities/cashflow.entity';
+import { CreateCashflowDto, UpdateCashflowDto } from './dto/cashflow.dto';
+import { CashFlowCategory } from './entities/cashflow-category.entity';
 
 @Injectable()
 export class CashflowService {
@@ -12,19 +17,37 @@ export class CashflowService {
         private cashFlowRepository: Repository<CashFlow>,
         @InjectRepository(Member)
         private memberRepository: Repository<Member>,
+        @InjectRepository(CashFlowCategory)
+        private cashFlowCategoryRepository: Repository<CashFlowCategory>,
     ) {}
 
-    async create(cashFlowData: Partial<CashFlow>): Promise<CashFlow> {
-        const cashFlow = this.cashFlowRepository.create(cashFlowData);
-        if (cashFlowData.member) {
-            const member = await this.memberRepository.findOne({
-                where: { id: cashFlowData.member.id },
-            });
-            if (member) {
-                cashFlow.member = member;
-            }
+    async create(dto: CreateCashflowDto, createdBy: string): Promise<CashFlow> {
+        const { amount, date, description, categoryId, memberId, type } = dto;
+
+        const memberDb = await this.memberRepository.findOne({
+            where: { id: memberId },
+        });
+
+        if (!memberDb) {
+            throw new BadRequestException('O membro não foi encontrado');
         }
-        return await this.cashFlowRepository.save(cashFlow);
+
+        const categoryDb = await this.cashFlowCategoryRepository.findOne({
+            where: { id: categoryId },
+        });
+
+        const newEntity = new CashFlow({
+            amount,
+            date,
+            description,
+            category: categoryDb,
+            member: memberDb,
+            type,
+            createdBy,
+            updatedBy: createdBy,
+        });
+
+        return await this.cashFlowRepository.save(newEntity);
     }
 
     async findAll(): Promise<CashFlow[]> {
@@ -45,19 +68,6 @@ export class CashflowService {
 
         // Update simple fields
         Object.assign(cashFlow, updateCashFlowDto);
-
-        // If member is being updated, fetch the new member
-        if (updateCashFlowDto.memberId) {
-            const member = await this.memberRepository.findOne({
-                where: { id: updateCashFlowDto.memberId },
-            });
-            if (!member) {
-                throw new NotFoundException(
-                    `Member #${updateCashFlowDto.memberId} not found`,
-                );
-            }
-            cashFlow.member = member;
-        }
 
         return await this.cashFlowRepository.save(cashFlow);
     }
