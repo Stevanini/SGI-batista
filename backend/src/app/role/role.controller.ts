@@ -6,22 +6,27 @@ import {
     Patch,
     Param,
     Delete,
+    UseInterceptors,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AdvancedSecurity } from '@/src/shared/decorators/security.decorator';
+import { CurrentUserInterceptor } from '@/src/shared/interceptors/current-user.interceptors';
+import { MemberFromJwt } from '../auth/interfaces/member-from-jwt';
 
 @ApiTags('Roles')
 @Controller('roles')
 @AdvancedSecurity()
+@UseInterceptors(CurrentUserInterceptor)
 export class RoleController {
     constructor(private readonly roleService: RoleService) {}
 
     @Post()
-    create(@Body() createRoleDto: CreateRoleDto) {
-        return this.roleService.create(createRoleDto, '');
+    @ApiBody({ type: CreateRoleDto })
+    create(@Body() dto: CreateRoleDto & { member: MemberFromJwt }) {
+        return this.roleService.create(dto, dto.member.name);
     }
 
     @Get()
@@ -35,8 +40,12 @@ export class RoleController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-        return this.roleService.update(id, updateRoleDto, '');
+    @ApiBody({ type: UpdateRoleDto })
+    update(
+        @Param('id') id: string,
+        @Body() dto: UpdateRoleDto & { member: MemberFromJwt },
+    ) {
+        return this.roleService.update(id, dto, dto.member.name);
     }
 
     @Delete(':id')

@@ -6,16 +6,19 @@ import {
     Patch,
     Param,
     Delete,
+    UseInterceptors,
 } from '@nestjs/common';
 import { PermissionService } from './permission.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AdvancedSecurity } from '@/src/shared/decorators/security.decorator';
+import { CurrentUserInterceptor } from '@/src/shared/interceptors/current-user.interceptors';
 
 @ApiTags('Permissions')
 @Controller('permissions')
 @AdvancedSecurity()
+@UseInterceptors(CurrentUserInterceptor)
 export class PermissionController {
     constructor(private readonly permissionService: PermissionService) {}
 

@@ -4,14 +4,12 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 
 import {
     USER_LOGIN_RELEASED,
     USER_STATUS_LABEL,
 } from '@shared/constants/user.constants';
 
-import { UserPayload } from './interfaces/user-payload';
 import { UserToken } from './interfaces/user-token';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,6 +17,7 @@ import { Member } from '../member/entities/member.entity';
 import { LoginRequestBody } from './dto/login.dto';
 import { PasswordService } from '@app/core/services/password.service';
 import { ConfigService } from '@nestjs/config';
+import { MemberPayload } from './interfaces/member-payload';
 
 @Injectable()
 export class AuthService {
@@ -48,9 +47,10 @@ export class AuthService {
             new Set(allPermissionOfRoles.concat(allPermission).flat()),
         );
 
-        const payload: UserPayload = {
+        const payload: MemberPayload = {
             sub: user.id,
             email,
+            name: user.name,
             permissions: mergedPermissions,
         };
 

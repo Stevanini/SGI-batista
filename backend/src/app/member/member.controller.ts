@@ -6,20 +6,22 @@ import {
     Patch,
     Param,
     Delete,
+    UseInterceptors,
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { AdvancedSecurity } from '@shared/decorators/security.decorator';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CurrentMember } from '../auth/decorators/current-member.decorator';
-import { Member } from './entities/member.entity';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { APIInfo } from '@/src/shared/decorators/api-info.decorator';
 import { IsPublic } from '@/src/shared/decorators/is-public.decorator';
+import { MemberFromJwt } from '../auth/interfaces/member-from-jwt';
+import { CurrentUserInterceptor } from '@/src/shared/interceptors/current-user.interceptors';
 
 @ApiTags('Members')
 @Controller('members')
 @AdvancedSecurity()
+@UseInterceptors(CurrentUserInterceptor)
 export class MemberController {
     constructor(private readonly memberService: MemberService) {}
 
@@ -30,8 +32,9 @@ export class MemberController {
     })
     @ApiResponse({ status: 403, description: 'Acesso proibido.' })
     @IsPublic()
-    create(@Body() createMemberDto: CreateMemberDto) {
-        return this.memberService.create(createMemberDto, '');
+    @ApiBody({ type: CreateMemberDto })
+    create(@Body() dto: CreateMemberDto & { member: MemberFromJwt }) {
+        return this.memberService.create(dto, dto.member.name);
     }
 
     @APIInfo({ name: 'aaa', description: 'Pegar todos os membro' })
@@ -46,8 +49,12 @@ export class MemberController {
     }
 
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
-        return this.memberService.update(id, updateMemberDto);
+    @ApiBody({ type: UpdateMemberDto })
+    update(
+        @Param('id') id: string,
+        @Body() dto: UpdateMemberDto & { member: MemberFromJwt },
+    ) {
+        return this.memberService.update(id, dto);
     }
 
     @Delete(':id')

@@ -5,28 +5,25 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Member } from '../member/entities/member.entity';
-import { CashFlow } from './entities/cashflow.entity';
-import { CreateCashflowDto, UpdateCashflowDto } from './dto/cashflow.dto';
-import { CashFlowCategory } from './entities/cashflow-category.entity';
+import { CashFlow } from '../entities/cashflow.entity';
+import { CreateCashflowDto, UpdateCashflowDto } from '../dto/cashflow.dto';
+import { CashFlowCategory } from '../entities/cashflow-category.entity';
+import { MemberService } from '../../member/member.service';
 
 @Injectable()
 export class CashflowService {
     constructor(
         @InjectRepository(CashFlow)
         private cashFlowRepository: Repository<CashFlow>,
-        @InjectRepository(Member)
-        private memberRepository: Repository<Member>,
         @InjectRepository(CashFlowCategory)
         private cashFlowCategoryRepository: Repository<CashFlowCategory>,
+        private readonly memberService: MemberService,
     ) {}
 
     async create(dto: CreateCashflowDto, createdBy: string): Promise<CashFlow> {
         const { amount, date, description, categoryId, memberId, type } = dto;
 
-        const memberDb = await this.memberRepository.findOne({
-            where: { id: memberId },
-        });
+        const memberDb = await this.memberService.findOne(memberId);
 
         if (!memberDb) {
             throw new BadRequestException('O membro não foi encontrado');
@@ -63,8 +60,11 @@ export class CashflowService {
     async update(
         id: string,
         updateCashFlowDto: UpdateCashflowDto,
+        updatedBy: string,
     ): Promise<CashFlow> {
         const cashFlow = await this.findOne(id);
+
+        cashFlow.updatedBy = updatedBy;
 
         // Update simple fields
         Object.assign(cashFlow, updateCashFlowDto);

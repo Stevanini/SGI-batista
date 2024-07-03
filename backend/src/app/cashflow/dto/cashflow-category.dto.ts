@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsUUID } from 'class-validator';
 
 export class CreateCashFlowCategoryDto {
     @IsString()
@@ -7,6 +7,9 @@ export class CreateCashFlowCategoryDto {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @IsUUID()
+    groupId: string;
 }
 
 export class UpdateCashFlowCategoryDto {
@@ -17,4 +20,8 @@ export class UpdateCashFlowCategoryDto {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @IsOptional()
+    @IsUUID()
+    groupId: string;
 }
