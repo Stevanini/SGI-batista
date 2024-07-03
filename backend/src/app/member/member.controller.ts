@@ -34,6 +34,7 @@ export class MemberController {
         return this.memberService.create(createMemberDto, '');
     }
 
+    @APIInfo({ name: 'aaa', description: 'Pegar todos os membro' })
     @Get()
     findAll() {
         return this.memberService.findAll();
@@ -52,11 +53,5 @@ export class MemberController {
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.memberService.remove(id);
-    }
-
-    @Get('/me')
-    @APIInfo({ name: 'me', description: 'Criar um membro' })
-    getMe(@CurrentMember() currentUser: Member) {
-        return currentUser;
     }
 }
