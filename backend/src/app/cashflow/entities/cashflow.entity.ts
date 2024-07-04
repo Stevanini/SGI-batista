@@ -15,6 +15,11 @@ export class CashFlow extends SGIBaseEntity {
     @Column({ nullable: true })
     description: string;
 
+    // @Column({
+    //     type: 'enum',
+    //     enum: Priority,
+    //     default: Priority.LOW,
+    //   })
     @Column()
     type: number; //cashflow-type.constants
 

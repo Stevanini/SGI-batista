@@ -44,7 +44,6 @@ export class SgiFileService {
     }
 
     async findFilesByTag(tag: string): Promise<SgiFile[]> {
-        // console.log('findFilesByTag');
         return this.sgiFileRepository
             .createQueryBuilder('sgiFile')
             .leftJoinAndSelect('sgiFile.sgiFileTag', 'tag')
