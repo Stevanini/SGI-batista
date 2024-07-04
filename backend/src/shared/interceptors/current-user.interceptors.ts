@@ -20,15 +20,16 @@ export class CurrentUserInterceptor implements NestInterceptor {
         if (jwtToken) {
             try {
                 const member = this.jwtService.verify<MemberFromJwt>(jwtToken);
-                request.member = member; // Adiciona o usuário ao objeto de requisição para acesso posterior
+                request.member = member;
             } catch (e) {
-                // Lidar com erros de validação do token JWT, se necessário
+                console.error('Erro', e);
             }
         }
 
+        // console.log('CurrentUserInterceptor');
         return next.handle().pipe(
             map((data) => {
-                // Pode modificar a resposta aqui, se necessário
+                // console.log('intercept', data);
                 return data;
             }),
         );

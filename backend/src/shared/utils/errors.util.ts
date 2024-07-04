@@ -2,6 +2,7 @@ import { ValidationError } from 'class-validator';
 
 export const handlerError = (validationErrors: ValidationError[]) =>
     validationErrors.map((validationError) => {
+        // console.log('handlerError');
         if (validationError.children && validationError.children.length > 0) {
             return handlerError(validationError.children);
         }

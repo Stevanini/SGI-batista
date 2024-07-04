@@ -29,12 +29,6 @@ export class MemberService {
             throw new BadRequestException('Email já esta em uso');
         }
 
-        // console.log(
-        //     'createMemberDto',
-        //     createMemberDto,
-        //     this.configService.get<string>('CRYPTO_KEY'),
-        // );
-
         const newMember = new Member({
             name,
             email,

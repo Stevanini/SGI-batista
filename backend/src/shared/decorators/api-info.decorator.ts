@@ -12,6 +12,7 @@ export interface APIInfoData {
 
 export const apiData = (name: string, description: string) => {
     const decoratorFactory = (target: any, key?: any, descriptor?: any) => {
+        // console.log('apiData', target, key, descriptor);
         if (!descriptor)
             throw Error('Decorator apiData is only apply in methods');
 

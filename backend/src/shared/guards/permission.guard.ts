@@ -58,10 +58,10 @@ export class PermissionGuard implements CanActivate {
 
         // console.log(
         //     'PermissionGuard',
-        //     payload,
-        //     accessPermission,
-        //     memberPermissions,
-        //     context,
+        //     // payload,
+        //     // accessPermission,
+        //     // memberPermissions,
+        //     // context,
         // );
         return true;
     }

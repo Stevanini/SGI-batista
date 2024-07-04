@@ -11,6 +11,8 @@ import { MemberPayload } from '../interfaces/member-payload';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor(private configService: ConfigService<EnvironmentVariables>) {
+        // console.log('JwtStrategy ctor');
+
         const publicKey = configService.get('JWT_PUBLIC_KEY', { infer: true });
 
         super({

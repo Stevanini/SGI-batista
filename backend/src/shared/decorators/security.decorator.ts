@@ -6,7 +6,7 @@ import {
     Logger,
     UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import {
     PERMISSION_METADATA_KEY,
     ALL_PERMISSIONS_METADATA_KEY,
@@ -37,6 +37,7 @@ export const addPermission = (permission: any, target: any) => {
 };
 
 export const SetPermissionName = (): CustomDecorator<string> => {
+    // console.log('SetPermissionName');
     const logger = new Logger('AdvancedSecurity');
 
     const decoratorFactory = (target: any, key?: any, descriptor?: any) => {
@@ -118,6 +119,7 @@ export const SetPermissionName = (): CustomDecorator<string> => {
             addPermission(permissionMethod, target.prototype[method]);
         }
 
+        // console.log('target', target);
         return target;
     };
 
@@ -134,6 +136,6 @@ export function AdvancedSecurity() {
         SetPermissionName(),
         UseGuards(PermissionGuard),
         ApiBearerAuth(),
-        // ApiUnauthorizedResponse(ADMINISTRATOR_UNAUTHORIZED),
+        ApiUnauthorizedResponse({ description: 'Unauthorized' }),
     );
 }

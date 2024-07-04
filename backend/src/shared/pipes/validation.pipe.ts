@@ -8,6 +8,7 @@ import { handlerError } from '@shared/utils/errors.util';
 
 export class HttpValidationPipe extends ValidationPipe {
     constructor(options?: ValidationPipeOptions) {
+        // console.log('HttpValidationPipe');
         super({
             transform: true,
             forbidUnknownValues: true,
