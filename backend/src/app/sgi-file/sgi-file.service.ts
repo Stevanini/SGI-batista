@@ -47,7 +47,7 @@ export class SgiFileService {
         return this.sgiFileRepository
             .createQueryBuilder('sgiFile')
             .leftJoinAndSelect('sgiFile.sgiFileTag', 'tag')
-            .where('tag.name = :tagName', { tagName: tag })
+            .where('tag.name = :tagName', { tagName: tag || null })
             .getMany();
     }
 
