@@ -23,4 +23,4 @@ $ docker-compose logs -f
 
 ```
 
-# Com isso, você terá um ambiente configurado para rodar o projeto usando Docker Compose.
+Com isso, você terá um ambiente configurado para rodar o projeto usando Docker Compose.
