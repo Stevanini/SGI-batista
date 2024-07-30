@@ -1,0 +1,26 @@
+# Use a imagem Node.js como base
+FROM node:18-alpine
+
+# Define o diretório de trabalho dentro do contêiner
+WORKDIR /app
+
+# Adiciona permissões ao diretório de trabalho
+RUN chown -R node:node /app
+
+# Copia o package.json e o yarn.lock para o diretório de trabalho
+COPY package*.json yarn.lock ./
+
+# Instala as dependências do projeto
+RUN yarn
+
+# Copia todo o código da aplicação para o diretório de trabalho
+COPY . .
+
+# Constrói o projeto Next.js
+RUN yarn build
+
+# Expõe a porta na qual a aplicação irá rodar
+EXPOSE 3000
+
+# Define o comando para iniciar a aplicação
+CMD ["yarn", "start"]
