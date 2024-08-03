@@ -16,6 +16,7 @@ async function bootstrap() {
     .setTitle('SGI')
     .setDescription('The SGI API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -32,7 +33,9 @@ async function bootstrap() {
       },
     }),
   );
-  const configService = app.get<ConfigService<EnvironmentVariables>>(ConfigService);
+
+  const configService =
+    app.get<ConfigService<EnvironmentVariables>>(ConfigService);
   const port = configService.get('PORT', { infer: true });
   await app.listen(port);
 }

@@ -1,27 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '@app/member/entities/member.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
-import { v4 as uuidv4 } from 'uuid';
+import { PasswordService } from '@app/core/services/password.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(Member)
     private membersRepository: Repository<Member>,
-  ) { }
+    private passwordService: PasswordService,
+    private configService: ConfigService,
+  ) {}
 
-  create(createMemberDto: CreateMemberDto): Promise<Member> {
-    const { name, email } = createMemberDto;
+  async create(
+    createMemberDto: CreateMemberDto,
+    createdBy: string,
+  ): Promise<Member> {
+    const { name, email, password } = createMemberDto;
 
-    const newMember = new Member();
-    newMember.id = uuidv4(); // Gerar UUID aleatório
-    newMember.name = name;
-    newMember.email = email;
+    const existingMember = await this.membersRepository.findOneBy({ email });
+    if (existingMember) {
+      throw new BadRequestException('Email já esta em uso');
+    }
 
-    return this.membersRepository.save(newMember);
+    console.log(
+      'createMemberDto',
+      createMemberDto,
+      this.configService.get<string>('CRYPTO_KEY'),
+    );
+
+    const newMember = new Member({
+      name,
+      email,
+      password: this.passwordService.encrypt(password),
+      createdBy,
+      updatedBy: createdBy,
+    });
+
+    const savedMember = await this.membersRepository.save(newMember);
+
+    return this.omitPassword(savedMember);
+  }
+
+  private omitPassword(member: Member): Member {
+    const { password, ...result } = member;
+    return result as Member;
   }
 
   findAll(): Promise<Member[]> {
