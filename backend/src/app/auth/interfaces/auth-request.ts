@@ -1,6 +1,11 @@
 import { Request } from 'express';
-import { Member } from '@app/member/entities/member.entity';
+import { LoginRequestBody } from '../dto/login.dto';
+import { Member } from '../../member/entities/member.entity';
 
-export interface AuthRequest extends Request {
-  user: Member;
+export interface AuthLoginRequest extends Request {
+    memberLogin: LoginRequestBody;
+}
+
+export interface AuthMemberRequest extends Request {
+    member: Member;
 }

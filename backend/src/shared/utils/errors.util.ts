@@ -10,10 +10,10 @@ export const handlerError = (validationErrors: ValidationError[]) =>
             property: validationError.property,
             error: validationError.constraints
                 ? Object.keys(validationError.constraints).map((k) =>
-                    k === 'whitelistValidation'
-                        ? `A propriedade ${validationError.property} é inesperada e por isso foi rejeitada`
-                        : validationError.constraints[k],
-                )
+                      k === 'whitelistValidation'
+                          ? `A propriedade ${validationError.property} é inesperada e por isso foi rejeitada`
+                          : validationError.constraints[k],
+                  )
                 : ['Não pode ser indefinido'],
         };
     });

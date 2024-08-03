@@ -9,61 +9,63 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MemberService {
-  constructor(
-    @InjectRepository(Member)
-    private membersRepository: Repository<Member>,
-    private passwordService: PasswordService,
-    private configService: ConfigService,
-  ) {}
+    constructor(
+        @InjectRepository(Member)
+        private membersRepository: Repository<Member>,
+        private passwordService: PasswordService,
+        private configService: ConfigService,
+    ) {}
 
-  async create(
-    createMemberDto: CreateMemberDto,
-    createdBy: string,
-  ): Promise<Member> {
-    const { name, email, password } = createMemberDto;
+    async create(
+        createMemberDto: CreateMemberDto,
+        createdBy: string,
+    ): Promise<Member> {
+        const { name, email, password } = createMemberDto;
 
-    const existingMember = await this.membersRepository.findOneBy({ email });
-    if (existingMember) {
-      throw new BadRequestException('Email já esta em uso');
+        const existingMember = await this.membersRepository.findOneBy({
+            email,
+        });
+        if (existingMember) {
+            throw new BadRequestException('Email já esta em uso');
+        }
+
+        // console.log(
+        //     'createMemberDto',
+        //     createMemberDto,
+        //     this.configService.get<string>('CRYPTO_KEY'),
+        // );
+
+        const newMember = new Member({
+            name,
+            email,
+            password: this.passwordService.encrypt(password),
+            createdBy,
+            updatedBy: createdBy,
+        });
+
+        const savedMember = await this.membersRepository.save(newMember);
+
+        return this.omitPassword(savedMember);
     }
 
-    console.log(
-      'createMemberDto',
-      createMemberDto,
-      this.configService.get<string>('CRYPTO_KEY'),
-    );
+    private omitPassword(member: Member): Member {
+        const { password, ...result } = member;
+        return result as Member;
+    }
 
-    const newMember = new Member({
-      name,
-      email,
-      password: this.passwordService.encrypt(password),
-      createdBy,
-      updatedBy: createdBy,
-    });
+    findAll(): Promise<Member[]> {
+        return this.membersRepository.find();
+    }
 
-    const savedMember = await this.membersRepository.save(newMember);
+    findOne(id: string): Promise<Member> {
+        return this.membersRepository.findOneBy({ id });
+    }
 
-    return this.omitPassword(savedMember);
-  }
+    async update(id: string, updateMemberDto: UpdateMemberDto): Promise<void> {
+        await this.membersRepository.update(id, updateMemberDto);
+    }
 
-  private omitPassword(member: Member): Member {
-    const { password, ...result } = member;
-    return result as Member;
-  }
-
-  findAll(): Promise<Member[]> {
-    return this.membersRepository.find();
-  }
-
-  findOne(id: string): Promise<Member> {
-    return this.membersRepository.findOneBy({ id });
-  }
-
-  async update(id: string, updateMemberDto: UpdateMemberDto): Promise<void> {
-    await this.membersRepository.update(id, updateMemberDto);
-  }
-
-  async remove(id: string): Promise<void> {
-    await this.membersRepository.delete(id);
-  }
+    async remove(id: string): Promise<void> {
+        await this.membersRepository.delete(id);
+    }
 }
