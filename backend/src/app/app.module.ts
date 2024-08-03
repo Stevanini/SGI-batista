@@ -10,6 +10,7 @@ import { PermissionModule } from '@app/permission/permission.module';
 import { RoleModule } from '@app/role/role.module';
 import { AuthModule } from './auth/auth.module';
 import { CoreModule } from './core/core.module';
+import { CashflowModule } from './cashflow/cashflow.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { CoreModule } from './core/core.module';
         PermissionModule,
         RoleModule,
         AuthModule,
+        CashflowModule,
     ],
     controllers: [AppController],
     providers: [

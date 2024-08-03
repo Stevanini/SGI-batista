@@ -5,8 +5,8 @@ import { PasswordService } from '@app/core/services/password.service';
 
 @Global()
 @Module({
-  controllers: [CoreController],
-  providers: [CoreService, PasswordService],
-  exports: [PasswordService],
+    controllers: [CoreController],
+    providers: [CoreService, PasswordService],
+    exports: [PasswordService],
 })
 export class CoreModule {}
