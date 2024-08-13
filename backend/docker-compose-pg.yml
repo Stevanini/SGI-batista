@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+
+  postgres_only:
+    container_name: sgi_postgres_only
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE}
+      PGPORT: ${DB_PORT}
+      PGDATA: /data/postgres
+      TZ: America/Sao_Paulo
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - postgres_only:/var/lib/postgresql/data
+    networks:
+      - sgi-network
+
+  pgadmin_only:
+    container_name: sgi_pgadmin_only
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: sgi
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - ${PGADMIN_PORT}:80
+    volumes:
+      - pgadmin_only:/root/.pgadmin
+    networks:
+      - sgi-network
+    depends_on:
+      - postgres_only
+
+volumes:
+  postgres_only:
+    driver: local
+    driver_opts:
+        type: none
+        o: bind
+        device: /c/Users/ACER-W11/Documents/docker/sgi
+  pgadmin_only:
+    driver: local
+    driver_opts:
+        type: none
+        o: bind
+        device: /c/Users/ACER-W11/Documents/docker/sgi/pgadmin
+
+networks:
+  sgi-network:

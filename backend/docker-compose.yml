@@ -1,0 +1,85 @@
+version: '3.8'
+services:
+
+  postgres:
+    container_name: sgi_postgres
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE}
+      PGPORT: 5432
+      PGDATA: /data/postgres
+      TZ: America/Sao_Paulo
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - sgi-network
+
+  pgadmin:
+    container_name: sgi_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: sgi
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - ${PGADMIN_PORT}:80
+    volumes:
+      - pgadmin:/root/.pgadmin
+    networks:
+      - sgi-network
+    depends_on:
+      - postgres
+
+  api:
+    container_name: sgi_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+    depends_on:
+      - postgres
+    networks:
+      - sgi-network
+    ports:
+      - "${PORT}:${PORT}"
+
+  nginx:
+    container_name: sgi_nginx
+    image: nginx:alpine
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+    networks:
+      - sgi-network
+
+
+volumes:
+  postgres:
+    driver: local
+    driver_opts:
+        type: none
+        o: bind
+        device: /c/Users/ACER-W11/Documents/docker/sgi
+  pgadmin:
+    driver: local
+    driver_opts:
+        type: none
+        o: bind
+        device: /c/Users/ACER-W11/Documents/docker/sgi/pgadmin
+
+networks:
+  sgi-network:
