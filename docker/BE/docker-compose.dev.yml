@@ -1,8 +1,6 @@
-version: '3.8'
 services:
-
-  postgres:
-    container_name: sgi_postgres
+  postgres_dev:
+    container_name: sgi_postgres_dev
     image: postgres:latest
     restart: always
     environment:
@@ -10,17 +8,17 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE}
       PGPORT: 5432
-      PGDATA: /data/postgres
+      PGDATA: /data/postgres_dev
       TZ: America/Sao_Paulo
     ports:
       - ${DB_PORT}:5432
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - v_dev_postgres:/var/lib/postgresql/data
     networks:
-      - sgi-network
+      - sgi-network-dev
 
-  pgadmin:
-    container_name: sgi_pgadmin
+  pgadmin_dev:
+    container_name: sgi_pgadmin_dev
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
@@ -29,17 +27,17 @@ services:
     ports:
       - ${PGADMIN_PORT}:80
     volumes:
-      - pgadmin:/root/.pgadmin
+      - v_dev_pgadmin:/root/.pgadmin
     networks:
-      - sgi-network
+      - sgi-network-dev
     depends_on:
-      - postgres
+      - postgres_dev
 
-  api:
-    container_name: sgi_api
+  sgi_backend_dev:
+    container_name: sgi_sgi_backend_dev
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../../backend
+      dockerfile: ../docker/BE/dev.Dockerfile
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres
@@ -48,38 +46,39 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE}
     depends_on:
-      - postgres
+      - postgres_dev
     networks:
-      - sgi-network
+      - sgi-network-dev
     ports:
       - "${PORT}:${PORT}"
 
-  nginx:
-    container_name: sgi_nginx
+  sgi_server_dev:
+    container_name: sgi_sgi_server_dev
     image: nginx:alpine
     ports:
       - "${NGINX_PORT}:80"
+    environment:
+      - ${PORT}=${PORT}
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - api
+      - sgi_backend_dev
     networks:
-      - sgi-network
-
+      - sgi-network-dev
 
 volumes:
-  postgres:
+  v_dev_postgres:
     driver: local
     driver_opts:
-        type: none
-        o: bind
-        device: /c/Users/ACER-W11/Documents/docker/sgi
-  pgadmin:
+      type: none
+      o: bind
+      device: /c/Users/ACER-W11/Documents/docker/sgi
+  v_dev_pgadmin:
     driver: local
     driver_opts:
-        type: none
-        o: bind
-        device: /c/Users/ACER-W11/Documents/docker/sgi/pgadmin
+      type: none
+      o: bind
+      device: /c/Users/ACER-W11/Documents/docker/sgi/pgadmin
 
 networks:
-  sgi-network:
+  sgi-network-dev:

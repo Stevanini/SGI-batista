@@ -1,6 +1,4 @@
-version: '3.8'
 services:
-
   postgres_only:
     container_name: sgi_postgres_only
     image: postgres:latest
@@ -39,15 +37,15 @@ volumes:
   postgres_only:
     driver: local
     driver_opts:
-        type: none
-        o: bind
-        device: /c/Users/ACER-W11/Documents/docker/sgi
+      type: none
+      o: bind
+      device: /c/Users/ACER-W11/Documents/docker/sgi
   pgadmin_only:
     driver: local
     driver_opts:
-        type: none
-        o: bind
-        device: /c/Users/ACER-W11/Documents/docker/sgi/pgadmin
+      type: none
+      o: bind
+      device: /c/Users/ACER-W11/Documents/docker/sgi/pgadmin
 
 networks:
   sgi-network:

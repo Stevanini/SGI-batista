@@ -1,0 +1,17 @@
+services:
+  sgi_frontend_dev:
+    container_name: sgi_frontend_dev
+    build:
+      context: ../../frontend
+      dockerfile: ../docker/FE/dev.Dockerfile
+    volumes:
+      - ../../frontend/src:/app/src
+      - ../../frontend/public:/app/public
+    restart: always
+    ports:
+      - 4000:3000
+    networks:
+      - sgi-network-dev
+
+networks:
+  sgi-network-dev:
