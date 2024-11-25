@@ -3,8 +3,10 @@ export default function SitePage() {
     <>
       <div>Site Content</div>
       <div>Site Content</div>
-      <div>Site Content</div>
-      <div>Site Content</div>
+
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div key={index}>Site Content</div>
+      ))}
     </>
   );
 }
