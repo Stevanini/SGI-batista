@@ -1,0 +1,10 @@
+export { Banner } from './banner';
+export { Contact } from './contact';
+export { Footer } from './footer';
+export { Gallery } from './gallery';
+export { Header } from './header';
+export { Information } from './information';
+export { Mission } from './mission';
+export { Offers } from './offers';
+export { Reflections } from './reflections';
+export { Welcome } from './welcome';

@@ -4,7 +4,7 @@ export const v_button = tv({
   base: 'rounded-md p-2 px-4 flex items-center gap-2',
   variants: {
     color: {
-      primary: 'text-zinc-50 bg-zinc-500 outline-zinc-700',
+      primary: 'text-zinc-50 bg-red-500 outline-red-700',
     },
     size: {
       xs: 'text-xs h-9',
