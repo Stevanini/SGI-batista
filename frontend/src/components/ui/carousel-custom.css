@@ -1,0 +1,58 @@
+.slick-arrow {
+  display: none !important;
+}
+
+.slick-arrow-custom {
+  position: absolute;
+  top: 50%;
+  z-index: 40;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  border-radius: 9999px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.slick-arrow-custom:hover {
+  background: rgba(0, 0, 0, 0.6);
+}
+.slick-arrow-custom-left {
+  left: 24px;
+}
+.slick-arrow-custom-right {
+  right: 24px;
+}
+
+.slick-dots-custom {
+  display: flex !important;
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 50;
+}
+.slick-dot-custom {
+  display: block;
+  width: 10px;
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s;
+}
+.slick-dots-custom li.slick-active .slick-dot-custom {
+  width: 16px;
+  background: #fff;
+}
+
+/* Remove default dots bg */
+.slick-dots-custom li {
+  margin: 0 !important;
+}

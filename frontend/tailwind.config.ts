@@ -3,10 +3,22 @@ import type { Config } from 'tailwindcss';
 const config: Config = {
   content: ['./src/pages/**/*.{js,ts,jsx,tsx,mdx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}', './src/app/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
-    fontFamily: {
-      sans: 'var(--font-inter)',
-    },
     extend: {
+      colors: {
+        primary: '#FF5C00', // Cor laranja dos botões
+        secondary: '#1E1E1E', // Cor escura do card de objetivo
+        tertiary: '#4A0404', // Cor vermelho escuro da seção Contribua
+        'text-primary': '#333333',
+        'text-secondary': '#666666',
+      },
+      container: {
+        center: true,
+        padding: '1rem',
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+        serif: ['var(--font-playfair)', 'serif'],
+      },
       keyframes: {
         scaleUp: {
           '0%': { transform: 'scale(0.5)', opacity: '0' },
