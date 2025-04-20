@@ -4,10 +4,7 @@ export function Welcome() {
   return (
     <section className="w-full flex justify-end items-center py-16 bg-[#FCFAF6] relative">
       <div className="max-w-xl w-full mr-16">
-        <span
-          className="block text-primary text-lg md:text-xl font-handwriting mb-2 text-right"
-          style={{ color: '#FF7A1A', fontFamily: 'Caveat, cursive' }}
-        >
+        <span className="block text-primary text-lg md:text-xl mb-2 text-right" style={{ fontFamily: 'Shadows Into Light, cursive' }}>
           BEM-VINDO À NOSSA CASA
         </span>
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-4 text-right font-serif">Batista Renovada</h2>
