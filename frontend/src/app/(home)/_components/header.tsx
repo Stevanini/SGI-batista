@@ -1,5 +1,12 @@
+import { CheckCircle } from 'lucide-react';
+import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
+
+const montserrat = Montserrat({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 export function Header() {
   const menuItems = [
@@ -15,16 +22,20 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 shadow-sm backdrop-blur-sm">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
-        <Link href="/" className="relative h-12 w-48">
-          <Image src="/logo.svg" alt="Logo Batista Renovada" fill className="object-contain" priority />
+        <Link href="/" className="flex flex-col items-center justify-center w-32">
+          <Image src="/assets/img/batista_renovada.png" alt="Logo Batista Renovada" width={42} height={42} className="object-contain" priority />
+          <span className={`${montserrat.className} font-normal text-[8px] text-red-500 whitespace-nowrap mt-1 tracking-widest uppercase`}>
+            Batista Renovada
+          </span>
         </Link>
 
         <nav className="hidden md:block">
           <ul className="flex items-center gap-8">
             {menuItems.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className="text-text-primary hover:text-primary transition-colors">
+                <Link href={item.href} className="group relative text-zinc-600 hover:text-zinc-800 transition-colors px-1 text-sm">
                   {item.label}
+                  <span className="block absolute left-0 right-0 -bottom-1 h-[2px] bg-primary rounded transition-transform duration-300 origin-right scale-x-0 group-hover:scale-x-100 group-hover:origin-left" />
                 </Link>
               </li>
             ))}
@@ -32,9 +43,7 @@ export function Header() {
         </nav>
 
         <button className="md:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
+          <CheckCircle className="w-6 h-6 text-primary" strokeWidth={2.5} />
         </button>
       </div>
     </header>

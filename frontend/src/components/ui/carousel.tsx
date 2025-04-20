@@ -52,7 +52,7 @@ export function Carousel({ items }: CarouselProps) {
       <div
         style={{
           position: 'absolute',
-          bottom: '48px',
+          bottom: '80px',
           left: 0,
           width: '100%',
           display: 'flex',

@@ -2,7 +2,7 @@ import { Banner, Contact, Footer, Gallery, Header, Information, Mission, Offers,
 
 export default function Page() {
   return (
-    <main>
+    <main className="bg-[#FCFAF6]">
       <Header />
       <Banner />
       <Information />
