@@ -39,7 +39,8 @@
   position: relative;
   z-index: 50;
 }
-.slick-dot-custom {
+/* Dots brancos para o banner */
+.slick-dot-custom-white {
   display: block;
   width: 10px;
   height: 6px;
@@ -47,12 +48,23 @@
   background: rgba(255, 255, 255, 0.5);
   transition: all 0.3s;
 }
-.slick-dots-custom li.slick-active .slick-dot-custom {
+.slick-dots-custom li.slick-active .slick-dot-custom-white {
   width: 16px;
   background: #fff;
 }
-
-/* Remove default dots bg */
+/* Dots pretos para reflexões */
+.slick-dot-custom-black {
+  display: block;
+  width: 10px;
+  height: 6px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+.slick-dots-custom li.slick-active .slick-dot-custom-black {
+  width: 16px;
+  background: #23202b;
+}
 .slick-dots-custom li {
   margin: 0 !important;
 }

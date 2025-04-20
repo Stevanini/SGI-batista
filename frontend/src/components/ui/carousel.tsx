@@ -66,7 +66,7 @@ export function Carousel({ items }: CarouselProps) {
         </ul>
       </div>
     ),
-    customPaging: () => <span className="slick-dot-custom" />,
+    customPaging: () => <span className="slick-dot-custom-white" />,
   };
 
   return (
