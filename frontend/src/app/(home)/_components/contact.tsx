@@ -1,5 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
+import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 interface ContactFormData {
   name: string;
@@ -78,7 +79,7 @@ export const Contact: React.FC = () => {
             </button>
           </form>
           {/* Informações de contato */}
-          <div className="flex-1 bg-zinc-50 flex flex-col justify-center gap-4 min-w-[260px] p-8">
+          <div className="flex-1 bg-zinc-50 flex flex-col items-center justify-center gap-4 min-w-[260px] p-8">
             <h3 className="text-lg font-bold mb-2">Address</h3>
             <p className="text-zinc-500">
               88 New Street, Washington DC
@@ -97,19 +98,31 @@ export const Contact: React.FC = () => {
               <br />
               inquiry@asting.com
             </p>
-            <h3 className="text-lg font-bold mt-4 mb-2">Follow</h3>
-            <div className="flex gap-3 mt-2">
-              <a href="#" className="text-blue-600">
-                <i className="fab fa-facebook-f" />
+            <h3 className="text-lg font-bold mt-4">Follow</h3>
+            <div className="flex gap-4 mt-2 justify-center">
+              <a
+                href="#"
+                className="rounded-full bg-[#405DE6] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
+              >
+                <FaFacebookF />
               </a>
-              <a href="#" className="text-sky-500">
-                <i className="fab fa-twitter" />
+              <a
+                href="#"
+                className="rounded-full bg-[#1DA1F2] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
+              >
+                <FaTwitter />
               </a>
-              <a href="#" className="text-red-500">
-                <i className="fab fa-youtube" />
+              <a
+                href="#"
+                className="rounded-full bg-[#e130a0] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
+              >
+                <FaInstagram />
               </a>
-              <a href="#" className="text-pink-500">
-                <i className="fab fa-instagram" />
+              <a
+                href="#"
+                className="rounded-full bg-[#FF0000] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
+              >
+                <FaYoutube />
               </a>
             </div>
           </div>
