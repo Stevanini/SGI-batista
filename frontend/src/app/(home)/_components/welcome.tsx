@@ -11,7 +11,7 @@ export function Welcome() {
         backgroundPosition: 'center',
       }}
     >
-      <div className="max-w-xl w-full mr-16">
+      <div className="container-1560 max-w-xl w-full mr-16 px-4 md:px-8">
         <span className="block text-primary text-lg md:text-xl mb-2 text-right" style={{ fontFamily: 'Shadows Into Light, cursive' }}>
           BEM-VINDO À NOSSA CASA
         </span>

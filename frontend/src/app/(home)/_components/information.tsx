@@ -5,8 +5,8 @@ import { Widget } from '~/components/atoms/Widget';
 
 export const Information: React.FC = () => {
   return (
-    <section className="relative z-20 -mt-16 bg-white shadow-lg rounded-xl w-4/5 max-w-[1210px] mx-auto">
-      <div className="bg-white shadow-sm p-4 rounded-lg flex flex-wrap flex-col w-full md:flex-row">
+    <section className="container-1560 px-4 md:px-8 relative z-20 -mt-16">
+      <div className="bg-white shadow-lg rounded-xl w-full p-4 flex flex-wrap flex-col md:flex-row">
         <div className="p-4 flex gap-4 flex-col flex-1">
           <Widget icon={PiHandHeartDuotone} color="orange" description="Missões" />
 

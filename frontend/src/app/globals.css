@@ -3,3 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.container-1560 {
+  max-width: 1560px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
