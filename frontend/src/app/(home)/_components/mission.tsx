@@ -5,14 +5,14 @@ const pattern =
 
 export function Mission() {
   return (
-    <section className="w-full flex flex-col md:flex-row items-center justify-center gap-8 py-16">
+    <section className="w-full flex flex-col md:flex-row items-center justify-center gap-8 py-16 bg-[#FCFAF6]">
       {/* Esquerda */}
       <div className="flex-1 flex flex-col md:flex-row items-center md:items-start gap-8 max-w-3xl">
         <div className="flex-1">
-          <span className="block text-primary text-lg mb-2" style={{ fontFamily: 'Shadows Into Light, cursive' }}>
+          <span className="block text-primary text-2xl mb-2" style={{ fontFamily: 'Shadows Into Light, cursive' }}>
             Missões
           </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-zinc-900 mb-4 font-serif">Bazar missionário</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-4 font-serif">Bazar missionário</h2>
           <p className="text-zinc-400 text-base md:text-lg mb-6">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and
             typesetting industry.
