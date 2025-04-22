@@ -8,7 +8,7 @@ export const Information: React.FC = () => {
     <section className="container-1560 px-4 md:px-8 relative z-20 -mt-16">
       <div className="bg-white shadow-lg rounded-xl w-full p-4 flex flex-wrap flex-col md:flex-row">
         <div className="p-4 flex gap-4 flex-col flex-1">
-          <Widget icon={PiHandHeartDuotone} color="orange" description="Missões" />
+          <Widget icon={PiHandHeartDuotone} color="primary" description="Missões" />
           <p className="text-zinc-400">
             Conheça e participe dos nossos projetos missionários, levando esperança e transformação para vidas em nossa cidade e além.
           </p>

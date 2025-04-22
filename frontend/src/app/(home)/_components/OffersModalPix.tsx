@@ -23,7 +23,7 @@ export function OffersModalPix({ open, onClose, pixKey }: OffersModalPixProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl p-8 shadow-lg w-full max-w-md flex flex-col items-center">
         <h2 className="text-2xl font-bold mb-2 text-center">
-          Contribua via PIX <span className="text-pink-500">💗</span>
+          Contribua via PIX
         </h2>
         <p className="text-zinc-500 mb-4 text-center">Qualquer valor faz a diferença!</p>
         <div className="bg-white p-4 rounded-xl shadow mb-4">

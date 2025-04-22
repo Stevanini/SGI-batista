@@ -8,13 +8,14 @@ import { ElementType } from 'react';
 
 interface WidgetProps {
   description: string;
-  color: 'blue' | 'green' | 'orange';
+  color: 'blue' | 'green' | 'orange' | 'primary';
   icon: ElementType;
 }
 
 export const Widget: React.FC<WidgetProps> = ({ color, description, icon: Icon }) => {
   const BG_IMAGES = {
     orange: WidgetBG1,
+    primary: WidgetBG1,
     blue: WidgetBG2,
     green: WidgetBG3,
   };
@@ -27,7 +28,7 @@ export const Widget: React.FC<WidgetProps> = ({ color, description, icon: Icon }
           className={clsx('z-10 transform scale-100 group-hover:scale-150 transition-transform duration-500 ease-in-out', {
             'text-blue-500': color === 'blue',
             'text-green-500': color === 'green',
-            'text-orange-500': color === 'orange',
+            'text-primary': color === 'primary' || color === 'orange',
           })}
         />
 

@@ -37,12 +37,12 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col gap-4 mb-8 md:mb-0 items-center md:items-start">
           <h4 className="font-extrabold text-lg mb-2">Contato</h4>
           <div className="flex items-center gap-2 text-zinc-300 mb-2">
-            <FiPhone className="text-orange-400" /> {contato?.telefone}
+            <FiPhone className="text-primary" /> {contato?.telefone}
           </div>
           <div className="flex items-center gap-2 text-zinc-300 mb-2">
-            <FiMail className="text-orange-400" />
+            <FiMail className="text-primary" />
             {contato ? (
-              <a href={`mailto:${contato.email}`} className="underline hover:text-orange-400 transition">
+              <a href={`mailto:${contato.email}`} className="underline hover:text-primary transition">
                 {contato.email}
               </a>
             ) : (
@@ -50,7 +50,7 @@ export const Footer: React.FC = () => {
             )}
           </div>
           <div className="flex items-center gap-2 text-zinc-300">
-            <FiMapPin className="text-orange-400" /> {contato?.endereco}
+            <FiMapPin className="text-primary" /> {contato?.endereco}
           </div>
         </div>
       </div>
