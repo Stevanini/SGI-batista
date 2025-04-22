@@ -11,16 +11,27 @@ interface BazarInfo {
   description: string;
   goal: number;
   current_value: number;
+  disabled?: boolean;
 }
 
 const BazarManager = () => {
   const [bazarInfo, setBazarInfo] = useState<BazarInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [goalInput, setGoalInput] = useState('');
+  const [currentValueInput, setCurrentValueInput] = useState('');
 
   useEffect(() => {
     fetchBazarInfo();
   }, []);
+
+  useEffect(() => {
+    if (bazarInfo) {
+      setGoalInput(bazarInfo.goal?.toString() ?? '');
+      setCurrentValueInput(bazarInfo.current_value?.toString() ?? '');
+    }
+  }, [bazarInfo]);
 
   const fetchBazarInfo = async () => {
     setLoading(true);
@@ -31,9 +42,7 @@ const BazarManager = () => {
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
-        
       if (error && error.code !== 'PGRST116') throw error;
-      
       setBazarInfo(data || null);
     } catch (error) {
       toast({
@@ -46,24 +55,36 @@ const BazarManager = () => {
     }
   };
 
-  const handleChange = (field: keyof BazarInfo, value: string | number) => {
+  const handleChange = (field: keyof BazarInfo, value: string | number | boolean) => {
     if (bazarInfo) {
-      setBazarInfo({ ...bazarInfo, [field]: value });
+      if ((field === 'goal' || field === 'current_value') && (value === '' || isNaN(Number(value)))) {
+        setBazarInfo({ ...bazarInfo, [field]: 0 });
+      } else {
+        setBazarInfo({ ...bazarInfo, [field]: value });
+      }
     }
   };
 
   const saveBazarInfo = async () => {
     if (!bazarInfo) return;
+    if (!bazarInfo.disabled && !bazarInfo.description.trim()) {
+      setError('Descrição obrigatória');
+      return;
+    }
+    setError(null);
     setSaving(true);
     try {
+      const goal = typeof bazarInfo.goal === 'number' && !isNaN(bazarInfo.goal) ? bazarInfo.goal : 0;
+      const current_value = typeof bazarInfo.current_value === 'number' && !isNaN(bazarInfo.current_value) ? bazarInfo.current_value : 0;
       let result;
       if (bazarInfo.id) {
         result = await supabase
           .from('bazar_info')
           .update({
             description: bazarInfo.description,
-            goal: bazarInfo.goal,
-            current_value: bazarInfo.current_value
+            goal,
+            current_value,
+            disabled: !!bazarInfo.disabled,
           })
           .eq('id', bazarInfo.id);
       } else {
@@ -71,8 +92,9 @@ const BazarManager = () => {
           .from('bazar_info')
           .insert({
             description: bazarInfo.description,
-            goal: bazarInfo.goal,
-            current_value: bazarInfo.current_value
+            goal,
+            current_value,
+            disabled: !!bazarInfo.disabled,
           })
           .select();
       }
@@ -98,14 +120,15 @@ const BazarManager = () => {
       id: '',
       description: 'Descrição do bazar missionário',
       goal: 1000,
-      current_value: 0
+      current_value: 0,
+      disabled: false,
     });
   };
 
   // Calculate progress percentage
-  const progressPercentage = bazarInfo 
-    ? Math.min(Math.round((bazarInfo.current_value / bazarInfo.goal) * 100), 100) 
-    : 0;
+  const goalNumber = bazarInfo && typeof bazarInfo.goal === 'number' && !isNaN(bazarInfo.goal) ? bazarInfo.goal : 0;
+  const currentNumber = bazarInfo && typeof bazarInfo.current_value === 'number' && !isNaN(bazarInfo.current_value) ? bazarInfo.current_value : 0;
+  const progressPercentage = goalNumber > 0 ? Math.min(Math.round((currentNumber / goalNumber) * 100), 100) : 0;
 
   return (
     <div>
@@ -132,13 +155,27 @@ const BazarManager = () => {
               <CardContent>
                 <div className="flex flex-col gap-6">
                   <div>
-                    <Label htmlFor="description">Descrição</Label>
+                    <label className="flex items-center gap-2 mb-2">
+                      <input
+                        type="checkbox"
+                        checked={!!bazarInfo.disabled}
+                        onChange={e => handleChange('disabled', e.target.checked)}
+                      />
+                      Ocultar Objetivo
+                    </label>
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Descrição do Objetivo</Label>
                     <textarea
                       id="description"
                       className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
                       value={bazarInfo.description}
                       onChange={(e) => handleChange('description', e.target.value)}
+                      disabled={!!bazarInfo.disabled}
                     />
+                    {!bazarInfo.disabled && error && (
+                      <span className="text-red-500 text-xs mt-1 block">{error}</span>
+                    )}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -148,8 +185,10 @@ const BazarManager = () => {
                         type="number"
                         min="0"
                         step="0.01"
-                        value={bazarInfo.goal}
-                        onChange={(e) => handleChange('goal', parseFloat(e.target.value))}
+                        value={goalInput}
+                        onChange={e => setGoalInput(e.target.value)}
+                        onBlur={() => handleChange('goal', parseFloat(goalInput) || 0)}
+                        disabled={!!bazarInfo.disabled}
                       />
                     </div>
                     <div>
@@ -159,8 +198,10 @@ const BazarManager = () => {
                         type="number"
                         min="0"
                         step="0.01"
-                        value={bazarInfo.current_value}
-                        onChange={(e) => handleChange('current_value', parseFloat(e.target.value))}
+                        value={currentValueInput}
+                        onChange={e => setCurrentValueInput(e.target.value)}
+                        onBlur={() => handleChange('current_value', parseFloat(currentValueInput) || 0)}
+                        disabled={!!bazarInfo.disabled}
                       />
                     </div>
                   </div>
@@ -173,7 +214,7 @@ const BazarManager = () => {
                       ></div>
                     </div>
                     <div className="text-right text-sm">
-                      {progressPercentage}% (R$ {bazarInfo.current_value.toFixed(2)} de R$ {bazarInfo.goal.toFixed(2)})
+                      {progressPercentage}% (R$ {currentNumber.toFixed(2)} de R$ {goalNumber.toFixed(2)})
                     </div>
                   </div>
                   <Button 

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 // @ts-ignore: Não há tipos para scroll-into-view
 import scrollIntoView from 'scroll-into-view';
+import { supabase } from '~/services/supabaseClient';
 
 const montserrat = Montserrat({
   weight: '400',
@@ -15,13 +16,26 @@ const montserrat = Montserrat({
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hasReflections, setHasReflections] = useState<boolean | null>(null);
+  const [hasGallery, setHasGallery] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data: reflections } = await supabase.from('reflexoes').select('id').limit(1);
+      setHasReflections(!!(reflections && reflections.length));
+      const { data: gallery } = await supabase.from('galeria').select('image_url').limit(1);
+      setHasGallery(!!(gallery && gallery.length));
+    }
+    fetchData();
+  }, []);
+
   const menuItems = [
     { label: 'Início', href: '/' },
     { label: 'Sobre', href: '#about' },
     { label: 'Contribua', href: '#contribute' },
     { label: 'Missões', href: '#missions' },
-    { label: 'Reflexões', href: '#reflections' },
-    { label: 'Galeria', href: '#gallery' },
+    ...(hasReflections ? [{ label: 'Reflexões', href: '#reflections' }] : []),
+    ...(hasGallery ? [{ label: 'Galeria', href: '#gallery' }] : []),
     { label: 'Contato', href: '#contact' },
   ];
 

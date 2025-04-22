@@ -32,6 +32,7 @@ export function Mission() {
     description: string;
     goal: number;
     current_value: number;
+    disabled?: boolean;
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +42,7 @@ export function Mission() {
       setLoading(true);
       const { data, error } = await supabase
         .from('bazar_info')
-        .select('description, goal, current_value')
+        .select('description, goal, current_value, disabled')
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
@@ -62,7 +63,6 @@ export function Mission() {
   }
 
   if (loading) return <MissionSkeleton />;
-  if (error || !bazar) return null;
 
   return (
     <section id="missions" className="w-full py-16 bg-[#FCFAF6]">
@@ -92,38 +92,40 @@ export function Mission() {
             />
           </div>
         </div>
-        {/* Direita: Card objetivo */}
-        <div
-          className="flex-1 max-w-sm w-full rounded-2xl p-8 shadow-lg flex flex-col gap-6 text-white"
-          style={{
-            background: `#23202B ${pattern}`,
-            backgroundBlendMode: 'overlay',
-          }}
-        >
-          <h3 className="text-2xl font-semibold mb-2">Objetivo</h3>
-          <p className="text-zinc-300 mb-4 break-words break-all whitespace-pre-line overflow-hidden line-clamp-7">{bazar.description}</p>
-          <hr className="border-zinc-700 mb-4" />
-          <div className="mb-4">
-            <div className="flex items-center mb-1">
-              <span className="text-xs">{percent.toFixed(0)}%</span>
+        {(!bazar || !bazar?.disabled) && (
+          <div
+            className="flex-1 max-w-sm w-full rounded-2xl p-8 shadow-lg flex flex-col gap-6 text-white"
+            style={{
+              background: `#23202B ${pattern}`,
+              backgroundBlendMode: 'overlay',
+            }}
+          >
+            <h3 className="text-2xl font-semibold mb-2">Objetivo</h3>
+            <p className="text-zinc-300 mb-4 break-words break-all whitespace-pre-line overflow-hidden line-clamp-7">{bazar?.description}</p>
+            <hr className="border-zinc-700 mb-4" />
+            <div className="mb-4">
+              <div className="flex items-center mb-1">
+                <span className="text-xs">{percent.toFixed(0)}%</span>
+              </div>
+              <div className="w-full h-2.5 bg-zinc-700 rounded-full overflow-hidden">
+                <div className="h-2.5 bg-primary rounded-full" style={{ width: `${percent}%` }} />
+              </div>
             </div>
-            <div className="w-full h-2.5 bg-zinc-700 rounded-full overflow-hidden">
-              <div className="h-2.5 bg-primary rounded-full" style={{ width: `${percent}%` }} />
+            <div className="flex flex-col gap-1 mb-4">
+              <span className="text-lg font-bold">
+                R$ {bazar?.current_value?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}{' '}
+                <span className="text-xs font-normal text-zinc-300">Valor arrecadado</span>
+              </span>
+              <span className="text-lg font-bold">
+                R$ {bazar?.goal?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} <span className="text-xs font-normal text-zinc-300">Meta</span>
+              </span>
             </div>
+            <button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8 py-3 flex items-center justify-center gap-2 text-base transition shadow-md">
+              <Heart className="w-5 h-5 fill-white" />
+              Doar
+            </button>
           </div>
-          <div className="flex flex-col gap-1 mb-4">
-            <span className="text-lg font-bold">
-              R$ {bazar.current_value?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} <span className="text-xs font-normal text-zinc-300">Valor arrecadado</span>
-            </span>
-            <span className="text-lg font-bold">
-              R$ {bazar.goal?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} <span className="text-xs font-normal text-zinc-300">Meta</span>
-            </span>
-          </div>
-          <button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8 py-3 flex items-center justify-center gap-2 text-base transition shadow-md">
-            <Heart className="w-5 h-5 fill-white" />
-            Doar
-          </button>
-        </div>
+        )}
       </div>
     </section>
   );
