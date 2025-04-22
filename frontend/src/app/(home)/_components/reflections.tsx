@@ -2,26 +2,27 @@
 
 import { Quote } from 'lucide-react';
 import Slider from 'react-slick';
-
-const testimonials = [
-  {
-    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    author: 'Pr. Divan',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-  },
-  {
-    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    author: 'Pr. Divan',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-  },
-  {
-    text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    author: 'Pr. Divan',
-    avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
-  },
-];
+import { useEffect, useState } from 'react';
+import { supabase } from '../../../services/supabaseClient';
+import type { Database } from '../../../interfaces/database.types';
+import styles from './Reflections.module.css';
 
 export function Reflections() {
+  const [reflections, setReflections] = useState<Database['public']['Tables']['reflexoes']['Row'][]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase
+      .from('reflexoes')
+      .select('*')
+      .then(({ data, error }) => {
+        if (error) setError(error.message);
+        if (data) setReflections(data);
+        setLoading(false);
+      });
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -47,6 +48,10 @@ export function Reflections() {
     customPaging: () => <span className="slick-dot-custom-black" />,
   };
 
+  if (loading) return <div>Carregando reflexões...</div>;
+  if (error) return <div>Erro ao carregar reflexões: {error}</div>;
+  if (!reflections.length) return <div>Nenhuma reflexão encontrada.</div>;
+
   return (
     <section className="w-full py-16 bg-[#FCFAF6]">
       <div id="reflections" className="container-1560 px-4 md:px-8">
@@ -55,18 +60,28 @@ export function Reflections() {
         </span>
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-10 text-center font-serif">Reflexões</h2>
         <Slider {...settings}>
-          {testimonials.map((item, idx) => (
-            <div key={idx} className="px-2 py-4">
-              <div className="bg-white rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px]">
-                <div className="flex flex-col items-center mb-4">
-                  <span className="w-10 h-10 rounded-full bg-primary flex items-center justify-center mb-4">
-                    <Quote className="w-6 h-6 text-white" />
-                  </span>
-                  <p className="text-zinc-400 text-center mb-6">{item.text}</p>
-                  <span className="block text-primary text-base mb-2" style={{ fontFamily: 'Shadows Into Light, cursive' }}>
-                    {item.author}
-                  </span>
-                  <img src={item.avatar} alt={item.author} className="w-14 h-14 rounded-full object-cover border-4 border-white shadow -mb-8" />
+          {reflections.map((item) => (
+            <div key={item.id} className="px-2 py-4">
+              <div className={`bg-white rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px] ${styles['reflection-card']}`}>
+                <div className="flex flex-col items-center justify-between flex-1 mb-4">
+                  <div className='flex flex-col items-center justify-center'>
+                    <span className="w-10 h-10 rounded-full bg-primary flex items-center justify-center mb-4">
+                      <Quote className="w-6 h-6 text-white" />
+                    </span>
+
+                    <p className={`text-zinc-400 text-center mb-6 ${styles['reflection-text-ellipsis']}`}>{item.text}</p>
+                  </div>
+
+                  <div>
+                    <span className="block text-primary text-base mb-2" style={{ fontFamily: 'Shadows Into Light, cursive' }}>
+                      {item.author_name}
+                    </span>
+                    <img
+                      src={item.author_image_url}
+                      alt={item.author_name}
+                      className="w-14 h-14 rounded-full object-cover border-4 border-white shadow -mb-8"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

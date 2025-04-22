@@ -1,0 +1,15 @@
+.reflection-text-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 12em; /* Aproximadamente 8 linhas, ajuste se necessário */
+}
+
+.reflection-card {
+  height: 400px; /* Ajuste conforme necessário para caber 8 linhas + autor + avatar */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+} 
