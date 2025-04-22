@@ -1,6 +1,6 @@
 'use client';
 import { useForm } from 'react-hook-form';
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
+import { SocialLinks } from '~/components/atoms/SocialLinks';
 
 interface ContactFormData {
   name: string;
@@ -99,32 +99,7 @@ export const Contact: React.FC = () => {
               inquiry@asting.com
             </p>
             <h3 className="text-lg font-bold mt-4">Follow</h3>
-            <div className="flex gap-4 mt-2 justify-center">
-              <a
-                href="#"
-                className="rounded-full bg-[#405DE6] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
-              >
-                <FaFacebookF />
-              </a>
-              <a
-                href="#"
-                className="rounded-full bg-[#1DA1F2] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
-              >
-                <FaTwitter />
-              </a>
-              <a
-                href="#"
-                className="rounded-full bg-[#e130a0] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="#"
-                className="rounded-full bg-[#FF0000] w-12 h-12 flex items-center justify-center text-white text-2xl hover:scale-110 transition"
-              >
-                <FaYoutube />
-              </a>
-            </div>
+            <SocialLinks className="mt-2 justify-center" iconSize={24} />
           </div>
         </div>
       </div>
