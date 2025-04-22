@@ -1,9 +1,45 @@
+'use client';
 import { Heart } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { supabase } from '~/services/supabaseClient';
 
 const pattern =
   "url(\"data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0L120 60L60 120L0 60L60 0Z' fill='white' fill-opacity='0.02'/%3E%3C/svg%3E\")";
 
 export function Mission() {
+  const [bazar, setBazar] = useState<{
+    description: string;
+    goal: number;
+    current_value: number;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchBazar() {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('bazar_info')
+        .select('description, goal, current_value')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (error) {
+        setError('Erro ao carregar informações do bazar');
+        setBazar(null);
+      } else {
+        setBazar(data);
+      }
+      setLoading(false);
+    }
+    fetchBazar();
+  }, []);
+
+  let percent = 0;
+  if (bazar && bazar.goal > 0) {
+    percent = Math.min(100, (bazar.current_value / bazar.goal) * 100);
+  }
+
   return (
     <section id="missions" className="w-full py-16 bg-[#FCFAF6]">
       <div className="container-1560 flex flex-col md:flex-row items-center md:justify-between justify-center gap-8 px-4 md:px-8">
@@ -41,27 +77,32 @@ export function Mission() {
           }}
         >
           <h3 className="text-2xl font-semibold mb-2">Objetivo</h3>
-          <p className="text-zinc-300 mb-4">
-            Nosso objetivo é arrecadar fundos para ampliar o alcance das nossas ações sociais e missionárias, promovendo o amor ao próximo e a
-            transformação de comunidades.
-          </p>
-          <hr className="border-zinc-700 mb-4" />
-          <div className="mb-4">
-            <div className="flex items-center mb-1">
-              <span className="text-xs">22.58%</span>
-            </div>
-            <div className="w-full h-2.5 bg-zinc-700 rounded-full overflow-hidden">
-              <div className="h-2.5 bg-primary rounded-full" style={{ width: '22.58%' }} />
-            </div>
-          </div>
-          <div className="flex flex-col gap-1 mb-4">
-            <span className="text-lg font-bold">
-              R$ 1.089.00 <span className="text-xs font-normal text-zinc-300">Doado</span>
-            </span>
-            <span className="text-lg font-bold">
-              R$ 4.000.00 <span className="text-xs font-normal text-zinc-300">Meta</span>
-            </span>
-          </div>
+          {loading ? (
+            <div className="text-center text-zinc-300">Carregando informações...</div>
+          ) : error ? (
+            <div className="text-center text-red-400">{error}</div>
+          ) : bazar ? (
+            <>
+              <p className="text-zinc-300 mb-4 break-words break-all whitespace-pre-line overflow-hidden line-clamp-7">{bazar.description}</p>
+              <hr className="border-zinc-700 mb-4" />
+              <div className="mb-4">
+                <div className="flex items-center mb-1">
+                  <span className="text-xs">{percent.toFixed(0)}%</span>
+                </div>
+                <div className="w-full h-2.5 bg-zinc-700 rounded-full overflow-hidden">
+                  <div className="h-2.5 bg-primary rounded-full" style={{ width: `${percent}%` }} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1 mb-4">
+                <span className="text-lg font-bold">
+                  R$ {bazar.current_value?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} <span className="text-xs font-normal text-zinc-300">Valor arrecadado</span>
+                </span>
+                <span className="text-lg font-bold">
+                  R$ {bazar.goal?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} <span className="text-xs font-normal text-zinc-300">Meta</span>
+                </span>
+              </div>
+            </>
+          ) : null}
           <button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8 py-3 flex items-center justify-center gap-2 text-base transition shadow-md">
             <Heart className="w-5 h-5 fill-white" />
             Doar

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Copy } from 'lucide-react';
-import QRCode from 'react-qr-code';
 
 interface OffersModalPixProps {
   open: boolean;
@@ -27,7 +26,7 @@ export function OffersModalPix({ open, onClose, pixKey }: OffersModalPixProps) {
         </h2>
         <p className="text-zinc-500 mb-4 text-center">Qualquer valor faz a diferença!</p>
         <div className="bg-white p-4 rounded-xl shadow mb-4">
-          <QRCode value={pixKey} size={180} viewBox={`0 0 256 256`} className="w-full h-auto max-w-full" />
+          <img src="/assets/img/pix.png" alt="QR Code PIX" className="w-44 h-44 object-contain mx-auto" />
         </div>
         <div className="mb-4 text-center">
           <span className="font-semibold">Chave PIX: </span>
