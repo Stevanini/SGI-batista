@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Copy } from 'lucide-react';
+import Image from "next/image";
 
 interface OffersModalPixProps {
   open: boolean;
@@ -26,7 +27,7 @@ export function OffersModalPix({ open, onClose, pixKey }: OffersModalPixProps) {
         </h2>
         <p className="text-zinc-500 mb-4 text-center">Qualquer valor faz a diferença!</p>
         <div className="bg-white p-4 rounded-xl shadow mb-4">
-          <img src="/assets/img/pix.png" alt="QR Code PIX" className="w-44 h-44 object-contain mx-auto" />
+          <Image src="/assets/img/pix.png" alt="QR Code PIX" width={176} height={176} className="w-44 h-44 object-contain mx-auto" />
         </div>
         <div className="mb-4 text-center">
           <span className="font-semibold">Chave PIX: </span>
