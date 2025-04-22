@@ -91,7 +91,13 @@ export const Contact: React.FC = () => {
               </a>
             </p>
             <h3 className="text-lg font-bold mt-4">Redes Sociais</h3>
-            <SocialLinks className="mt-2 justify-center" iconSize={24} />
+            <SocialLinks
+              className="mt-2 justify-center"
+              iconSize={24}
+              facebook={contato.facebook}
+              instagram={contato.instagram}
+              youtube={contato.youtube}
+            />
           </div>
         </div>
       </div>
