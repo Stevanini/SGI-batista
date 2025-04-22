@@ -12,29 +12,26 @@ export const Footer: React.FC = () => {
       <div className="absolute inset-0 bg-[#23202B]/90 pointer-events-none z-0" />
       <div className="relative z-10 container-1560 px-4 md:px-8 mx-auto flex flex-col md:flex-row flex-wrap gap-12 md:gap-8 justify-around items-center md:items-start text-center md:text-left">
         {/* Logo e descrição */}
-        <div className="flex flex-col items-center md:items-start mb-8 md:mb-0">
-          <div className="flex flex-col items-center mb-4 text-center">
+        <div className="flex flex-col items-center md:items-start mb-2 md:mb-0">
+          <div className="flex flex-col items-center mb-2 text-center">
             <Image src="/assets/img/batista_renovada.png" alt="Logo Batista Renovada" width={42} height={42} className="object-contain" priority />
             <span className="font-normal text-[10px] text-red-500 whitespace-nowrap mt-1 tracking-widest uppercase">Batista Renovada</span>
           </div>
-          <p className="text-zinc-300 mb-6 max-w-xs text-center md:text-left">
+          <p className="text-zinc-300 mb-2 max-w-xs text-center md:text-left">
             Venha celebrar conosco, participar dos nossos cultos e fazer parte desta grande família de amor.
           </p>
           <SocialLinks className="mt-2 mb-4" iconSize={24} />
         </div>
         {/* Explore */}
         {/* Contribua */}
-        <div className="flex flex-col gap-4 items-center md:items-start mb-8 md:mb-0">
+        <div className="flex flex-col gap-4 items-center md:items-start mb-2 md:mb-0">
           <h4 className="font-extrabold text-lg mb-2">Contribua</h4>
-          <p className="text-zinc-300 mb-4 max-w-xs text-center md:text-left">
+          <p className="text-zinc-300 mb-2 max-w-xs text-center md:text-left">
             Sua oferta é um ato voluntário, um ato de amor e compromisso com a obra de Deus e a Igreja do Senhor.
-          </p>
-          <button className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full px-8 py-3 flex items-center gap-2 text-base transition shadow-md">
-            <span className="text-xl">❤</span> Contribuir
-          </button>
+          </p> 
         </div>
         {/* Contact */}
-        <div className="flex flex-col gap-4 mb-8 md:mb-0 items-center md:items-start">
+        <div className="flex flex-col gap-4 mb-2 md:mb-0 items-center md:items-start">
           <h4 className="font-extrabold text-lg mb-2">Contato</h4>
           <div className="flex items-center gap-2 text-zinc-300 mb-2">
             <FiPhone className="text-primary" /> {contato?.telefone}

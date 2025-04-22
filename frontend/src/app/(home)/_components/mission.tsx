@@ -15,20 +15,20 @@ export function Mission() {
             </span>
             <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-4 font-serif">Bazar missionário</h2>
             <p className="text-zinc-400 text-base md:text-lg mb-6">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and
-              typesetting industry.
+              Nosso bazar missionário é uma iniciativa solidária para apoiar projetos sociais e missionários da igreja. Cada contribuição, seja com
+              doações ou compras, ajuda a transformar vidas e levar esperança a quem mais precisa. Participe e faça parte dessa história!
             </p>
           </div>
           <div className="flex flex-col gap-4">
             <img
-              src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=400&h=250&fit=crop&auto=format&q=80"
-              alt="Missão 1"
-              className="rounded-xl w-40 h-28 object-cover shadow"
+              src="assets/img/missionario.png"
+              alt="Missionário pregando"
+              className="rounded-xl w-1/2 md:w-40 h-28 object-cover object-top shadow"
             />
             <img
               src="https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=400&h=250&fit=crop&auto=format&q=80"
               alt="Missão 2"
-              className="rounded-xl w-40 h-28 object-cover shadow"
+              className="rounded-xl w-1/2 md:w-40 h-28 object-cover shadow"
             />
           </div>
         </div>
@@ -41,7 +41,10 @@ export function Mission() {
           }}
         >
           <h3 className="text-2xl font-semibold mb-2">Objetivo</h3>
-          <p className="text-zinc-300 mb-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+          <p className="text-zinc-300 mb-4">
+            Nosso objetivo é arrecadar fundos para ampliar o alcance das nossas ações sociais e missionárias, promovendo o amor ao próximo e a
+            transformação de comunidades.
+          </p>
           <hr className="border-zinc-700 mb-4" />
           <div className="mb-4">
             <div className="flex items-center mb-1">

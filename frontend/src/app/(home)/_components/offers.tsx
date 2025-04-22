@@ -4,7 +4,7 @@ import { OffersModalPix } from './OffersModalPix';
 
 export function Offers() {
   const [open, setOpen] = useState(false);
-  const pixKey = 'doacoes@exemplo.com';
+  const pixKey = '17.408.215/0001-49';
 
   return (
     <section id="contribute" className="relative w-full h-[320px] md:h-[380px] flex items-center justify-center overflow-hidden">
@@ -24,7 +24,7 @@ export function Offers() {
           Sua oferta é um ato voluntário, um ato de amor e compromisso com a obra de Deus e a Igreja do Senhor.
         </p>
         <button className="bg-white text-red-600 font-semibold rounded-lg px-8 py-3 shadow transition" onClick={() => setOpen(true)}>
-          Veja todas as formas de colaborar
+          Contribuir
         </button>
       </div>
       <OffersModalPix open={open} onClose={() => setOpen(false)} pixKey={pixKey} />

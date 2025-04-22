@@ -23,16 +23,15 @@ export const Contact: React.FC = () => {
 
   const onSubmit = (data: ContactFormData) => {
     if (!contato?.telefone) return;
-    const whatsappNumber = contato.telefone.replace(/\D/g, '');
+    let whatsappNumber = contato.telefone.replace(/\D/g, '');
+    if (!whatsappNumber.startsWith('55')) {
+      whatsappNumber = `55${whatsappNumber}`;
+    }
     const message = `Nome: ${data.name}\nEmail: ${data.email}\nMensagem: ${data.message}`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
     window.open(whatsappLink, '_blank');
   };
-
-  if (loading) return <div>Carregando contato...</div>;
-  if (error) return <div>Erro ao carregar contato: {error}</div>;
-  if (!contato) return <div>Nenhum contato encontrado.</div>;
 
   return (
     <section id="contact" className="w-full py-16 bg-white">
@@ -76,28 +75,50 @@ export const Contact: React.FC = () => {
           </form>
           {/* Informações de contato */}
           <div className="flex-1 bg-zinc-50 flex flex-col items-center justify-center gap-4 min-w-[260px] p-8">
-            <h3 className="text-lg font-bold mb-2">Endereço</h3>
-            <p className="text-zinc-500">
-              {contato.endereco}
-            </p>
-            <h3 className="text-lg font-bold mt-4 mb-2">WhatsApp</h3>
-            <p className="text-zinc-500">
-              Local: {contato.telefone}
-            </p>
-            <h3 className="text-lg font-bold mt-4 mb-2">Email</h3>
-            <p className="text-zinc-500">
-              <a href={`mailto:${contato.email}`} className="underline hover:text-primary transition">
-                {contato.email}
-              </a>
-            </p>
-            <h3 className="text-lg font-bold mt-4">Redes Sociais</h3>
-            <SocialLinks
-              className="mt-2 justify-center"
-              iconSize={24}
-              facebook={contato.facebook}
-              instagram={contato.instagram}
-              youtube={contato.youtube}
-            />
+            {contato?.endereco && (
+              <>
+                <h3 className="text-lg font-bold mb-2">Endereço</h3>
+                <p className="text-zinc-500">{contato?.endereco}</p>
+              </>
+            )}
+
+            {contato?.telefone && (
+              <>
+                <h3 className="text-lg font-bold mt-4 mb-2">WhatsApp</h3>
+                <p className="text-zinc-500">{contato?.telefone}</p>
+              </>
+            )}
+
+            {contato?.email && (
+              <>
+                <h3 className="text-lg font-bold mt-4 mb-2">Email</h3>
+                <p className="text-zinc-500">
+                  <a target="_blank" href={`mailto:${contato?.email}`} className="underline hover:text-primary transition">
+                    {contato?.email}
+                  </a>
+                </p>
+              </>
+            )}
+
+            {(!!contato?.facebook || !!contato?.instagram || !!contato?.youtube) && (
+              <>
+                <h3 className="text-lg font-bold mt-4">Redes Sociais</h3>
+                <SocialLinks
+                  className="mt-2 justify-center"
+                  iconSize={24}
+                  facebook={contato?.facebook}
+                  instagram={contato?.instagram}
+                  youtube={contato?.youtube}
+                  whatsapp={
+                    contato?.telefone
+                      ? contato?.telefone.replace(/\D/g, '').startsWith('55')
+                        ? contato?.telefone.replace(/\D/g, '')
+                        : `55${contato?.telefone.replace(/\D/g, '')}`
+                      : undefined
+                  }
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
