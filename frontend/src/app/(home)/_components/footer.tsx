@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
           <p className="text-zinc-300 mb-4 max-w-xs text-center md:text-left">
             Com colaboradores e voluntários entusiasmados, estamos prontos para apoiar você a qualquer momento.
           </p>
-          <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-full px-8 py-3 flex items-center gap-2 text-base transition shadow-md">
+          <button className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full px-8 py-3 flex items-center gap-2 text-base transition shadow-md">
             <span className="text-xl">❤</span> Contribuir
           </button>
         </div>

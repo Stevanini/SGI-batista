@@ -69,7 +69,7 @@ export const Contact: React.FC = () => {
             {errors.message && <span className="text-red-500 text-xs ml-2">{errors.message.message}</span>}
             <button
               type="submit"
-              className="mt-4 w-48 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 shadow transition self-start"
+              className="mt-4 w-48 rounded-full bg-primary hover:bg-primary/90 text-white font-bold py-4 shadow transition self-start"
             >
               Enviar
             </button>
@@ -86,7 +86,7 @@ export const Contact: React.FC = () => {
             </p>
             <h3 className="text-lg font-bold mt-4 mb-2">Email</h3>
             <p className="text-zinc-500">
-              <a href={`mailto:${contato.email}`} className="underline hover:text-orange-500 transition">
+              <a href={`mailto:${contato.email}`} className="underline hover:text-primary transition">
                 {contato.email}
               </a>
             </p>

@@ -1,4 +1,11 @@
+'use client';
+import { useState } from 'react';
+import { OffersModalPix } from './OffersModalPix';
+
 export function Offers() {
+  const [open, setOpen] = useState(false);
+  const pixKey = 'doacoes@exemplo.com';
+
   return (
     <section id="contribute" className="relative w-full h-[320px] md:h-[380px] flex items-center justify-center overflow-hidden">
       {/* Imagem de fundo */}
@@ -16,8 +23,11 @@ export function Offers() {
         <p className="text-white text-center max-w-2xl mb-8">
           Sua oferta é um ato voluntário, um ato de amor e compromisso com a obra de Deus e a Igreja do Senhor.
         </p>
-        <button className="bg-white text-red-600 font-semibold rounded-lg px-8 py-3 shadow transition">Veja todas as formas de colaborar</button>
+        <button className="bg-white text-red-600 font-semibold rounded-lg px-8 py-3 shadow transition" onClick={() => setOpen(true)}>
+          Veja todas as formas de colaborar
+        </button>
       </div>
+      <OffersModalPix open={open} onClose={() => setOpen(false)} pixKey={pixKey} />
     </section>
   );
 }

@@ -5,7 +5,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#FF5C00', // Cor laranja dos botões
+        primary: '#EF4444', // Cor laranja dos botões
         secondary: '#1E1E1E', // Cor escura do card de objetivo
         tertiary: '#4A0404', // Cor vermelho escuro da seção Contribua
         'text-primary': '#333333',
