@@ -29,8 +29,8 @@ import {
   ShoppingBag,
   Mail,
 } from "lucide-react";
-import UserApprovalManager from '@/pages/dashboard/UserApprovalManager';
-import { supabase } from '@/integrations/supabase/client';
+import UserApprovalManager from "@/pages/dashboard/UserApprovalManager";
+import { supabase } from "@/integrations/supabase/client";
 
 // Componente para o botão de toggle da sidebar
 const SidebarToggleButton = () => {
@@ -133,9 +133,9 @@ const DashboardLayout = () => {
     const fetchProfile = async () => {
       if (user) {
         const { data } = await supabase
-          .from('user_profiles')
-          .select('is_admin')
-          .eq('id', user.id)
+          .from("user_profiles")
+          .select("is_admin")
+          .eq("id", user.id)
           .single();
         setIsAdmin(!!data?.is_admin);
       }
@@ -204,8 +204,18 @@ const DashboardLayout = () => {
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+
               {isAdmin && (
                 <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Membros">
+                      <a href="/dashboard/membros">
+                        <Users />
+                        <span>Membros</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild tooltip="Usuários">
                       <a href="/dashboard/usuarios">

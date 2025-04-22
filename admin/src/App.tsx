@@ -16,6 +16,7 @@ import GaleriaManager from "./pages/dashboard/GaleriaManager";
 import ContatoManager from "./pages/dashboard/ContatoManager";
 import UserApprovalManager from './pages/dashboard/UserApprovalManager';
 import CaixaManager from './pages/dashboard/CaixaManager';
+import MembrosManager from './pages/dashboard/MembrosManager';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -52,6 +53,11 @@ const App = () => (
               <Route path="caixa" element={
                 <AdminRoute>
                   <CaixaManager />
+                </AdminRoute>
+              } />
+              <Route path="membros" element={
+                <AdminRoute>
+                  <MembrosManager />
                 </AdminRoute>
               } />
             </Route>
