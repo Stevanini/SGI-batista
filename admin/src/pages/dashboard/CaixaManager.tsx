@@ -17,6 +17,7 @@ import {
   LocaleModule,
   PaginationModule,
 } from "ag-grid-community";
+import { NumericFormat } from "react-number-format";
 
 interface Lancamento {
   id: string;
@@ -112,41 +113,49 @@ export default function CaixaManager() {
   };
 
   const handleSubmit = async () => {
-    if (
-      !form.data ||
-      !form.descricao ||
-      !form.valor ||
-      !form.tipo ||
-      !form.categoria
-    ) {
-      toast({
-        title: "Preencha todos os campos obrigatórios",
-        variant: "destructive",
-      });
-      return;
+    if (loading) return;
+    setLoading(true);
+    try {
+      if (
+        !form.data ||
+        !form.descricao ||
+        !form.valor ||
+        !form.tipo ||
+        !form.categoria
+      ) {
+        toast({
+          title: "Preencha todos os campos obrigatórios",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const novoLanc = {
+        ...form,
+        valor: Number(form.valor),
+        user_id: user?.id || "",
+        created_at: new Date().toISOString(),
+      };
+      const { error } = await supabase.from("caixa_lancamentos").insert(novoLanc);
+      if (error) {
+        toast({
+          title: "Erro ao salvar lançamento",
+          description: error.message,
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+      toast({ title: "Lançamento adicionado!" });
+      setShowForm(false);
+      setForm({ tipo: "entrada", data: "", valor: 0 });
+      fetchLancamentos();
+    } finally {
+      setLoading(false);
     }
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    const novoLanc = {
-      ...form,
-      valor: Number(form.valor),
-      user_id: user?.id || "",
-      created_at: new Date().toISOString(),
-    };
-    const { error } = await supabase.from("caixa_lancamentos").insert(novoLanc);
-    if (error) {
-      toast({
-        title: "Erro ao salvar lançamento",
-        description: error.message,
-        variant: "destructive",
-      });
-      return;
-    }
-    toast({ title: "Lançamento adicionado!" });
-    setShowForm(false);
-    setForm({ tipo: "entrada", data: "", valor: 0 });
-    fetchLancamentos();
   };
 
   const handleSoftDelete = async (id: string) => {
@@ -229,7 +238,6 @@ export default function CaixaManager() {
       user_email: user?.email || l.user_id,
     };
   });
- 
 
   return (
     <div>
@@ -277,7 +285,10 @@ export default function CaixaManager() {
           <CardTitle className="text-left">Lançamentos</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="ag-theme-alpine" style={{ width: "100%", height: 400 }}>
+          <div
+            className="ag-theme-alpine"
+            style={{ width: "100%", height: 400 }}
+          >
             <AgGridReact
               rowData={lancamentosGrid}
               columnDefs={columns}
@@ -330,10 +341,18 @@ export default function CaixaManager() {
               ))}
             </select>
             <Label>Valor</Label>
-            <Input
-              type="number"
+            <NumericFormat
               value={form.valor || ""}
-              onChange={(e) => handleChange("valor", e.target.value)}
+              onValueChange={(values) => {
+                const { floatValue } = values;
+                handleChange("valor", floatValue !== undefined ? floatValue.toString() : "");
+              }}
+              thousandSeparator="."
+              decimalSeparator=","
+              prefix="R$ "
+              allowNegative={false}
+              className="border rounded p-2 w-full text-xs"
+              placeholder="R$ 0,00"
             />
             <Label>Observação</Label>
             <Input
@@ -344,7 +363,9 @@ export default function CaixaManager() {
               <Button variant="outline" onClick={() => setShowForm(false)}>
                 Cancelar
               </Button>
-              <Button onClick={handleSubmit}>Salvar</Button>
+              <Button onClick={handleSubmit} disabled={loading}>
+                Salvar
+              </Button>
             </div>
           </div>
         </div>
