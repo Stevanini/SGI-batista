@@ -1,8 +1,12 @@
+'use client';
 import Image from 'next/image';
 import { FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
 import { SocialLinks } from '~/components/atoms/SocialLinks';
+import { useContato } from '../../../hooks/useContato';
 
 export const Footer: React.FC = () => {
+  const { contato } = useContato();
+
   return (
     <footer className="relative w-full bg-[#23202B] text-white pt-16 pb-6 overflow-hidden">
       <div className="absolute inset-0 bg-[#23202B]/90 pointer-events-none z-0" />
@@ -33,21 +37,33 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col gap-4 mb-8 md:mb-0 items-center md:items-start">
           <h4 className="font-extrabold text-lg mb-2">Contact</h4>
           <div className="flex items-center gap-2 text-zinc-300 mb-2">
-            <FiPhone className="text-orange-400" /> 666 888 0000
+            <FiPhone className="text-orange-400" /> {contato?.telefone}
           </div>
           <div className="flex items-center gap-2 text-zinc-300 mb-2">
-            <FiMail className="text-orange-400" /> needhelp@company.com
+            <FiMail className="text-orange-400" />
+            {contato ? (
+              <a href={`mailto:${contato.email}`} className="underline hover:text-orange-400 transition">
+                {contato.email}
+              </a>
+            ) : (
+              'needhelp@company.com'
+            )}
           </div>
           <div className="flex items-center gap-2 text-zinc-300">
-            <FiMapPin className="text-orange-400" /> 666 road, broklyn street
-            <br />
-            new york 600
+            <FiMapPin className="text-orange-400" /> {contato?.endereco}
           </div>
         </div>
       </div>
       <div className="relative z-10 container-1560 px-4 md:px-8 mx-auto mt-10 border-t border-zinc-700 pt-6 flex flex-col md:flex-row items-center justify-center text-zinc-400 text-sm gap-2 text-center">
         <span>© Copyright 2025 by Batista Renovada</span>
       </div>
+      {contato && (
+        <div>
+          <span>Email: {contato.email}</span>
+          <span>Telefone: {contato.telefone}</span>
+          <span>Endereço: {contato.endereco}</span>
+        </div>
+      )}
     </footer>
   );
 };

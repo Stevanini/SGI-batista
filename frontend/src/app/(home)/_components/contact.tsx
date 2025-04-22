@@ -1,6 +1,7 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { SocialLinks } from '~/components/atoms/SocialLinks';
+import { useContato } from '../../../hooks/useContato';
 
 interface ContactFormData {
   name: string;
@@ -17,10 +18,16 @@ export const Contact: React.FC = () => {
     formState: { errors },
   } = useForm<ContactFormData>();
 
+  const { contato, loading, error } = useContato();
+
   const onSubmit = (data: ContactFormData) => {
     // Aqui você pode enviar os dados para uma API ou serviço de email
     alert(JSON.stringify(data, null, 2));
   };
+
+  if (loading) return <div>Carregando contato...</div>;
+  if (error) return <div>Erro ao carregar contato: {error}</div>;
+  if (!contato) return <div>Nenhum contato encontrado.</div>;
 
   return (
     <section id="contact" className="w-full py-16 bg-white">
@@ -82,21 +89,17 @@ export const Contact: React.FC = () => {
           <div className="flex-1 bg-zinc-50 flex flex-col items-center justify-center gap-4 min-w-[260px] p-8">
             <h3 className="text-lg font-bold mb-2">Address</h3>
             <p className="text-zinc-500">
-              88 New Street, Washington DC
-              <br />
-              United States, America
+              {contato.endereco}
             </p>
             <h3 className="text-lg font-bold mt-4 mb-2">Phone</h3>
             <p className="text-zinc-500">
-              Local: 666 888 0000
-              <br />
-              Mobile: 000 8888 999
+              Local: {contato.telefone}
             </p>
             <h3 className="text-lg font-bold mt-4 mb-2">Email</h3>
             <p className="text-zinc-500">
-              needhelp@company.com
-              <br />
-              inquiry@asting.com
+              <a href={`mailto:${contato.email}`} className="underline hover:text-orange-500 transition">
+                {contato.email}
+              </a>
             </p>
             <h3 className="text-lg font-bold mt-4">Follow</h3>
             <SocialLinks className="mt-2 justify-center" iconSize={24} />
