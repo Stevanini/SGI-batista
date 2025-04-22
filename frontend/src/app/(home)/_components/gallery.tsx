@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import '~/components/ui/carousel-custom.css';
-import { images } from '~/configs/images';
+import { supabase } from '~/services/supabaseClient';
 
 function chunkArray<T>(arr: T[], chunkSize: number): T[][] {
   const results = [];
@@ -24,6 +24,24 @@ function getColumnsByWidth(width: number) {
 
 export const Gallery: React.FC = () => {
   const [columns, setColumns] = useState(3);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchImages() {
+      setLoading(true);
+      const { data, error } = await supabase.from('galeria').select('image_url').order('created_at', { ascending: false });
+      if (error) {
+        setError('Erro ao carregar galeria');
+        setGalleryImages([]);
+      } else {
+        setGalleryImages((data || []).map((img) => img.image_url));
+      }
+      setLoading(false);
+    }
+    fetchImages();
+  }, []);
 
   useEffect(() => {
     function handleResize() {
@@ -34,7 +52,7 @@ export const Gallery: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const slides = chunkArray([...images.gallery], columns);
+  const slides = chunkArray(galleryImages, columns);
 
   const settings = {
     dots: true,
@@ -56,30 +74,35 @@ export const Gallery: React.FC = () => {
     <section className="w-full py-16 bg-[#FCFAF6]">
       <div id="gallery" className="container-1560 px-4 md:px-8">
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-10 text-center font-serif">Galeria</h2>
-        <Slider {...settings}>
-          {slides.map((group, idx) => (
-            <div key={idx} className="px-2 md:px-2">
-              <div className="flex gap-4 justify-center">
-                {group.map((url, colIdx) => (
-                  <div key={colIdx} className="flex flex-col gap-4 flex-1">
-                    <div className="rounded-xl overflow-hidden shadow bg-white w-full" style={{ aspectRatio: '11/9' }}>
-                      <img
-                        src={url}
-                        alt={`Galeria ${idx * columns + colIdx + 1}`}
-                        className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-                        loading="lazy"
-                      />
+        {loading ? (
+          <div className="text-center text-zinc-400 py-12">Carregando imagens...</div>
+        ) : error ? (
+          <div className="text-center text-red-500 py-12">{error}</div>
+        ) : (
+          <Slider {...settings}>
+            {slides.map((group, idx) => (
+              <div key={idx} className="px-2 md:px-2">
+                <div className="flex gap-4 justify-center">
+                  {group.map((url, colIdx) => (
+                    <div key={colIdx} className="flex flex-col gap-4 flex-1 max-w-xs">
+                      <div className="rounded-xl overflow-hidden shadow bg-white w-full" style={{ aspectRatio: '11/9' }}>
+                        <img
+                          src={url}
+                          alt={`Galeria ${idx * columns + colIdx + 1}`}
+                          className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
-                {/* Preencher com placeholders invisíveis se faltar colunas */}
-                {Array.from({ length: columns - group.length }).map((_, i) => (
-                  <div key={`placeholder-${i}`} className="flex-1" />
-                ))}
+                  ))}
+                  {Array.from({ length: columns - group.length }).map((_, i) => (
+                    <div key={`placeholder-${i}`} className="flex-1 max-w-xs" />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        )}
       </div>
     </section>
   );

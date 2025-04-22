@@ -18,8 +18,8 @@ export function Header() {
   const menuItems = [
     { label: 'Início', href: '/' },
     { label: 'Sobre', href: '#about' },
-    { label: 'Missões', href: '#missions' },
     { label: 'Contribua', href: '#contribute' },
+    { label: 'Missões', href: '#missions' },
     { label: 'Reflexões', href: '#reflections' },
     { label: 'Galeria', href: '#gallery' },
     { label: 'Contato', href: '#contact' },
