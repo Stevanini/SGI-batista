@@ -14,7 +14,7 @@ function ReflectionsSkeleton() {
         <div className="h-10 w-48 bg-zinc-200 rounded mb-10 mx-auto animate-pulse" />
         <div className="flex gap-4 justify-center">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white flex-1 rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px] max-w-xs animate-pulse">
+            <div key={i} className="bg-white rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px] w-80 max-w-xs animate-pulse">
               <div className="w-10 h-10 rounded-full bg-zinc-200 mb-4" />
               <div className="h-6 w-32 bg-zinc-200 rounded mb-2" />
               <div className="h-4 w-40 bg-zinc-200 rounded mb-2" />
@@ -46,15 +46,15 @@ export function Reflections() {
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 600,
-    slidesToShow: 3,
+    slidesToShow: Math.min(3, reflections.length),
     slidesToScroll: 1,
     arrows: false,
     responsive: [
       {
         breakpoint: 1024,
-        settings: { slidesToShow: 2 },
+        settings: { slidesToShow: Math.min(2, reflections.length) },
       },
       {
         breakpoint: 640,
@@ -82,7 +82,7 @@ export function Reflections() {
         <Slider {...settings}>
           {reflections.map((item) => (
             <div key={item.id} className="px-2 py-4">
-              <div className={`bg-white rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px] ${styles['reflection-card']}`}>
+              <div className={`bg-white rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px] max-w-[500px] ${styles['reflection-card']}`}>
                 <div className="flex flex-col items-center justify-between flex-1 mb-4">
                   <div className='flex flex-col items-center justify-center'>
                     <span className="w-10 h-10 rounded-full bg-primary flex items-center justify-center mb-4">

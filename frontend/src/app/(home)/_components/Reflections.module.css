@@ -8,8 +8,8 @@
 }
 
 .reflection-card {
-  height: 400px; /* Ajuste conforme necessário para caber 8 linhas + autor + avatar */
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-} 
+}
