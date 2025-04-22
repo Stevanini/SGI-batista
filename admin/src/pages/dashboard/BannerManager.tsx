@@ -109,15 +109,6 @@ const BannerManager = () => {
   };
 
   const addNewBanner = async () => {
-    if (banners.length >= 3) {
-      toast({
-        title: 'Limite atingido',
-        description: 'Você já possui o máximo de 3 banners.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
     try {
       const { data, error } = await supabase
         .from('banner_images')
@@ -127,14 +118,11 @@ const BannerManager = () => {
           description: ''
         })
         .select();
-        
       if (error) throw error;
-      
       toast({
         title: 'Banner adicionado',
         description: 'Um novo banner foi adicionado.',
       });
-      
       fetchBanners();
     } catch (error: unknown) {
       toast({
@@ -173,8 +161,8 @@ const BannerManager = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Gerenciamento de Banner</h1>
-        <Button onClick={addNewBanner} disabled={banners.length >= 3}>
-          Adicionar Banner ({banners.length}/3)
+        <Button onClick={addNewBanner}>
+          Adicionar Banner ({banners.length})
         </Button>
       </div>
       
