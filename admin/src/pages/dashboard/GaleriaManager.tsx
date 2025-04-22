@@ -17,7 +17,7 @@ const GaleriaManager = () => {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showNewImageForm, setShowNewImageForm] = useState(false);
-  const [newImage, setNewImage] = useState<{ blob: Blob | null, url: string | null }>({ blob: null, url: '' });
+  const [newImages, setNewImages] = useState<{ blob: Blob, url: string }[]>([]);
 
   useEffect(() => {
     fetchImages();
@@ -34,10 +34,10 @@ const GaleriaManager = () => {
       if (error) throw error;
       
       setImages(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Erro ao carregar imagens',
-        description: error.message,
+        description: (error as Error).message,
         variant: 'destructive',
       });
     } finally {
@@ -47,52 +47,56 @@ const GaleriaManager = () => {
 
   const handleNewImage = () => {
     setShowNewImageForm(true);
-    setNewImage({ blob: null, url: '' });
+    setNewImages([]);
   };
 
-  const handleImageCrop = (data: { blob: Blob, url: string }) => {
-    setNewImage(data);
+  const handleFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const files = Array.from(e.target.files);
+    const images = files.map(file => ({ blob: file, url: URL.createObjectURL(file) }));
+    setNewImages(images);
   };
 
-  const handleSaveNewImage = async () => {
-    if (!newImage.blob) {
+  const handleSaveNewImages = async () => {
+    if (!newImages.length) {
       toast({
         title: 'Erro',
-        description: 'Faça upload de uma imagem antes de salvar.',
+        description: 'Selecione ao menos uma imagem antes de salvar.',
         variant: 'destructive',
       });
       return;
     }
     setUploading(true);
     try {
-      // Upload da imagem
-      const fileName = `${Math.random().toString(36).substring(2, 15)}.jpg`;
-      const filePath = `galeria/${fileName}`;
-      const { data, error } = await supabase.storage
-        .from('admin-images')
-        .upload(filePath, newImage.blob, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-      if (error) throw error;
-      const { data: { publicUrl } } = supabase.storage
-        .from('admin-images')
-        .getPublicUrl(filePath);
-      const { error: dbError } = await supabase
-        .from('galeria')
-        .insert({ image_url: publicUrl });
-      if (dbError) throw dbError;
+      for (const img of newImages) {
+        const fileName = `${Math.random().toString(36).substring(2, 15)}.jpg`;
+        const filePath = `galeria/${fileName}`;
+        const { error } = await supabase.storage
+          .from('admin-images')
+          .upload(filePath, img.blob, {
+            cacheControl: '3600',
+            upsert: false,
+          });
+        if (error) throw error;
+        const { data: { publicUrl } } = supabase.storage
+          .from('admin-images')
+          .getPublicUrl(filePath);
+        const { error: dbError } = await supabase
+          .from('galeria')
+          .insert({ image_url: publicUrl });
+        if (dbError) throw dbError;
+      }
       toast({
-        title: 'Imagem adicionada',
-        description: 'A imagem foi adicionada com sucesso à galeria.',
+        title: 'Imagens adicionadas',
+        description: 'As imagens foram adicionadas com sucesso à galeria.',
       });
       setShowNewImageForm(false);
-      setNewImage({ blob: null, url: '' });
+      setNewImages([]);
       fetchImages();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
-        title: 'Erro ao salvar imagem',
-        description: error.message,
+        title: 'Erro ao salvar imagens',
+        description: (error as Error).message,
         variant: 'destructive',
       });
     } finally {
@@ -115,10 +119,10 @@ const GaleriaManager = () => {
         title: 'Imagem excluída',
         description: 'A imagem foi removida com sucesso da galeria.',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Erro ao excluir imagem',
-        description: error.message,
+        description: (error as Error).message,
         variant: 'destructive',
       });
     }
@@ -139,35 +143,49 @@ const GaleriaManager = () => {
       {showNewImageForm && (
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Adicionar Nova Imagem</CardTitle>
+            <CardTitle>Adicionar Novas Imagens</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative pb-16">
               <div>
-                <ImageCropUpload 
-                  bucketName="admin-images"
-                  path="galeria/new"
-                  onSuccess={handleImageCrop}
-                  currentImage={newImage.url || ''}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById('multi-image-upload')?.click()}
                   className="mb-4"
-                  aspectRatio={3/2}
-                  cropWidth={600}
-                  cropHeight={400}
+                >
+                  Selecionar Imagens
+                </Button>
+                <input
+                  id="multi-image-upload"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFilesSelected}
+                  className="hidden"
                 />
+                {newImages.length > 0 && (
+                  <div className="text-sm text-gray-600 mb-2">{newImages.length} imagem(ns) selecionada(s)</div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  {newImages.map((img, idx) => (
+                    <img key={idx} src={img.url} alt="preview" className="w-32 h-24 object-cover rounded shadow" />
+                  ))}
+                </div>
               </div>
               <div className="flex items-end h-full w-full">
                 <div className="absolute bottom-0 right-0 flex gap-2 w-full justify-end">
                   <Button 
                     variant="outline" 
-                    onClick={() => setShowNewImageForm(false)}
+                    onClick={() => { setShowNewImageForm(false); setNewImages([]); }}
                   >
                     Cancelar
                   </Button>
                   <Button 
-                    onClick={handleSaveNewImage}
-                    disabled={uploading || !newImage.blob}
+                    onClick={handleSaveNewImages}
+                    disabled={uploading || !newImages.length}
                   >
-                    {uploading ? 'Salvando...' : 'Salvar Imagem'}
+                    {uploading ? 'Salvando...' : 'Salvar Imagens'}
                   </Button>
                 </div>
               </div>

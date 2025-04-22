@@ -2,6 +2,7 @@
 import { Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '~/services/supabaseClient';
+import { OffersModalPix } from './OffersModalPix';
 
 const pattern =
   "url(\"data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0L120 60L60 120L0 60L60 0Z' fill='white' fill-opacity='0.02'/%3E%3C/svg%3E\")";
@@ -36,6 +37,8 @@ export function Mission() {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [openPixModal, setOpenPixModal] = useState(false);
+  const pixKey = '17.408.215/0001-49';
 
   useEffect(() => {
     async function fetchBazar() {
@@ -120,13 +123,17 @@ export function Mission() {
                 R$ {bazar?.goal?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} <span className="text-xs font-normal text-zinc-300">Meta</span>
               </span>
             </div>
-            <button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8 py-3 flex items-center justify-center gap-2 text-base transition shadow-md">
+            <button
+              className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-8 py-3 flex items-center justify-center gap-2 text-base transition shadow-md"
+              onClick={() => setOpenPixModal(true)}
+            >
               <Heart className="w-5 h-5 fill-white" />
               Doar
             </button>
           </div>
         )}
       </div>
+      <OffersModalPix open={openPixModal} onClose={() => setOpenPixModal(false)} pixKey={pixKey} />
     </section>
   );
 }
