@@ -68,6 +68,7 @@ export default function CaixaManager() {
   });
   const [saldo, setSaldo] = useState(0);
   const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchLancamentos();
@@ -139,7 +140,9 @@ export default function CaixaManager() {
         user_id: user?.id || "",
         created_at: new Date().toISOString(),
       };
-      const { error } = await supabase.from("caixa_lancamentos").insert(novoLanc);
+      const { error } = await supabase
+        .from("caixa_lancamentos")
+        .insert(novoLanc);
       if (error) {
         toast({
           title: "Erro ao salvar lançamento",
@@ -179,7 +182,10 @@ export default function CaixaManager() {
   const lancamentosFiltrados = lancamentos.filter(
     (l) =>
       (!filter.tipo || l.tipo === filter.tipo) &&
-      (!filter.categoria || l.categoria === filter.categoria)
+      (!filter.categoria || l.categoria === filter.categoria) &&
+      (!search ||
+        l.descricao?.toLowerCase().includes(search.toLowerCase()) ||
+        l.observacao?.toLowerCase().includes(search.toLowerCase()))
   );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -189,9 +195,6 @@ export default function CaixaManager() {
       field: "data",
       valueFormatter: (p) => new Date(p.value).toLocaleDateString(),
     },
-    { headerName: "Descrição", field: "descricao" },
-    { headerName: "Tipo", field: "tipo" },
-    { headerName: "Categoria", field: "categoria" },
     {
       headerName: "Valor",
       field: "valor",
@@ -211,6 +214,14 @@ export default function CaixaManager() {
             })}
           </span>
         ),
+    },
+    { headerName: "Descrição", field: "descricao" },
+    { headerName: "Tipo", field: "tipo" },
+    { headerName: "Categoria", field: "categoria" },
+    {
+      headerName: "Observação",
+      field: "observacao",
+      cellRenderer: (p) => p.value || "-",
     },
     { headerName: "Usuário", field: "user_email" },
     {
@@ -255,30 +266,37 @@ export default function CaixaManager() {
           </div>
         </CardContent>
       </Card>
-      <div className="flex gap-4 mb-4">
-        <select
-          className="border rounded p-2"
-          value={filter.tipo}
-          onChange={(e) => setFilter((f) => ({ ...f, tipo: e.target.value }))}
-        >
-          <option value="">Todos os tipos</option>
-          <option value="entrada">Entradas</option>
-          <option value="saida">Saídas</option>
-        </select>
-        <select
-          className="border rounded p-2"
-          value={filter.categoria}
-          onChange={(e) =>
-            setFilter((f) => ({ ...f, categoria: e.target.value }))
-          }
-        >
-          <option value="">Todas categorias</option>
-          {categorias.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+      <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+        <Input
+          type="text"
+          placeholder="Pesquisar por descrição ou observação"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full max-w-xs"
+        />
+        <div className="flex gap-2">
+          <select
+            className="border rounded px-4 py-2"
+            value={filter.tipo}
+            onChange={(e) => setFilter((f) => ({ ...f, tipo: e.target.value }))}
+          >
+            <option value="">Todos os tipos</option>
+            <option value="entrada">Entradas</option>
+            <option value="saida">Saídas</option>
+          </select>
+          <select
+            className="border rounded px-4 py-2"
+            value={filter.categoria}
+            onChange={(e) => setFilter((f) => ({ ...f, categoria: e.target.value }))}
+          >
+            <option value="">Todas categorias</option>
+            {categorias.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <Card>
         <CardHeader>
@@ -345,7 +363,10 @@ export default function CaixaManager() {
               value={form.valor || ""}
               onValueChange={(values) => {
                 const { floatValue } = values;
-                handleChange("valor", floatValue !== undefined ? floatValue.toString() : "");
+                handleChange(
+                  "valor",
+                  floatValue !== undefined ? floatValue.toString() : ""
+                );
               }}
               thousandSeparator="."
               decimalSeparator=","
