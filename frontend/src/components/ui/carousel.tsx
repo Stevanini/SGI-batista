@@ -82,9 +82,6 @@ export function Carousel({ items }: CarouselProps) {
             <div className="relative z-20 container mx-auto h-full flex flex-col items-center justify-center text-center text-white px-4">
               <h1 className="text-5xl md:text-7xl font-serif mb-6 drop-shadow-lg">{item.title}</h1>
               <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-8 drop-shadow">{item.description}</p>
-              <button className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-full text-lg transition-colors shadow-lg">
-                Saiba Mais
-              </button>
             </div>
           </div>
         ))}

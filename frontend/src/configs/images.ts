@@ -1,19 +1,9 @@
 export const images = {
   banner: [
     {
-      url: 'https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1920&h=1080&fit=crop&crop=focalpoint&auto=format&q=80',
-      title: 'Batista Renovada',
-      description: 'Uma igreja comprometida com a palavra de Deus e a transformação de vidas',
-    },
-    {
       url: 'https://images.unsplash.com/photo-1445445290350-18a3b86e0b5a?w=1920&h=1080&fit=crop&crop=focalpoint&auto=format&q=80',
-      title: 'Comunidade Viva',
-      description: 'Um lugar de amor, adoração e crescimento espiritual',
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?w=1920&h=1080&fit=crop&crop=focalpoint&auto=format&q=80',
-      title: 'Missões',
-      description: 'Levando esperança e transformação para todas as nações',
+      title: 'Igreja Batista Renovada',
+      description: 'Bem-vindo ao site da Igreja Batista Renovada!',
     },
   ],
   gallery: [

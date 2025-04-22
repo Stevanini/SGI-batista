@@ -12,6 +12,7 @@ interface Banner {
   id: string;
   title: string;
   image_url: string;
+  description: string;
 }
 
 const BannerManager = () => {
@@ -36,10 +37,10 @@ const BannerManager = () => {
       if (error) throw error;
       
       setBanners(data || []);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Erro ao carregar banners',
-        description: error.message,
+        description: (error as Error).message,
         variant: 'destructive',
       });
     } finally {
@@ -50,6 +51,12 @@ const BannerManager = () => {
   const handleTitleChange = (id: string, title: string) => {
     setBanners(banners.map(banner => 
       banner.id === id ? { ...banner, title } : banner
+    ));
+  };
+
+  const handleDescriptionChange = (id: string, description: string) => {
+    setBanners(banners.map(banner =>
+      banner.id === id ? { ...banner, description } : banner
     ));
   };
 
@@ -81,7 +88,7 @@ const BannerManager = () => {
       }
       const { error } = await supabase
         .from('banner_images')
-        .update({ title: banner.title, image_url: imageUrl })
+        .update({ title: banner.title, image_url: imageUrl, description: banner.description })
         .eq('id', banner.id);
       if (error) throw error;
       toast({
@@ -89,11 +96,11 @@ const BannerManager = () => {
         description: 'As alterações foram salvas com sucesso!',
       });
       setBannerImages(prev => ({ ...prev, [banner.id]: { blob: null, url: imageUrl } }));
-      setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, title: banner.title, image_url: imageUrl } : b));
-    } catch (error: any) {
+      setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, title: banner.title, image_url: imageUrl, description: banner.description } : b));
+    } catch (error: unknown) {
       toast({
         title: 'Erro ao salvar banner',
-        description: error.message,
+        description: (error as Error).message,
         variant: 'destructive',
       });
     } finally {
@@ -116,7 +123,8 @@ const BannerManager = () => {
         .from('banner_images')
         .insert({ 
           title: 'Novo Banner', 
-          image_url: 'https://placehold.co/1200x400/png'
+          image_url: 'https://placehold.co/1200x400/png',
+          description: ''
         })
         .select();
         
@@ -128,10 +136,10 @@ const BannerManager = () => {
       });
       
       fetchBanners();
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Erro ao adicionar banner',
-        description: error.message,
+        description: (error as Error).message,
         variant: 'destructive',
       });
     }
@@ -152,10 +160,10 @@ const BannerManager = () => {
         title: 'Banner excluído',
         description: 'O banner foi removido com sucesso.',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Erro ao excluir banner',
-        description: error.message,
+        description: (error as Error).message,
         variant: 'destructive',
       });
     }
@@ -211,6 +219,16 @@ const BannerManager = () => {
                         id={`title-${banner.id}`}
                         value={banner.title}
                         onChange={(e) => handleTitleChange(banner.id, e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`description-${banner.id}`}>Descrição do Banner</Label>
+                      <Input
+                        id={`description-${banner.id}`}
+                        value={banner.description || ''}
+                        onChange={(e) => handleDescriptionChange(banner.id, e.target.value)}
+                        maxLength={120}
+                        placeholder="Digite uma breve descrição para o banner"
                       />
                     </div>
                     <div className="absolute bottom-0 left-0 w-full flex justify-end p-0">
