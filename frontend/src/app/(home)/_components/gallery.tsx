@@ -22,6 +22,23 @@ function getColumnsByWidth(width: number) {
   return 1; // mobile
 }
 
+function GallerySkeleton() {
+  return (
+    <section className="w-full py-16 bg-[#FCFAF6]">
+      <div className="container-1560 px-4 md:px-8">
+        <div className="h-10 w-48 bg-zinc-200 rounded mb-10 mx-auto animate-pulse" />
+        <div className="flex gap-4 justify-center">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="flex flex-col gap-4 flex-1 max-w-xs">
+              <div className="rounded-xl overflow-hidden shadow bg-zinc-200 w-full h-60 animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export const Gallery: React.FC = () => {
   const [columns, setColumns] = useState(3);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
@@ -70,39 +87,36 @@ export const Gallery: React.FC = () => {
     customPaging: () => <span className="slick-dot-custom-black" />,
   };
 
+  if (loading) return <GallerySkeleton />;
+  if (error || !galleryImages.length) return null;
+
   return (
     <section className="w-full py-16 bg-[#FCFAF6]">
       <div id="gallery" className="container-1560 px-4 md:px-8">
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-10 text-center font-serif">Galeria</h2>
-        {loading ? (
-          <div className="text-center text-zinc-400 py-12">Carregando imagens...</div>
-        ) : error ? (
-          <div className="text-center text-red-500 py-12">{error}</div>
-        ) : (
-          <Slider {...settings}>
-            {slides.map((group, idx) => (
-              <div key={idx} className="px-2 md:px-2">
-                <div className="flex gap-4 justify-center">
-                  {group.map((url, colIdx) => (
-                    <div key={colIdx} className="flex flex-col gap-4 flex-1 max-w-xs">
-                      <div className="rounded-xl overflow-hidden shadow bg-white w-full" style={{ aspectRatio: '11/9' }}>
-                        <img
-                          src={url}
-                          alt={`Galeria ${idx * columns + colIdx + 1}`}
-                          className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-                          loading="lazy"
-                        />
-                      </div>
+        <Slider {...settings}>
+          {slides.map((group, idx) => (
+            <div key={idx} className="px-2 md:px-2">
+              <div className="flex gap-4 justify-center">
+                {group.map((url, colIdx) => (
+                  <div key={colIdx} className="flex flex-col gap-4 flex-1 max-w-xs">
+                    <div className="rounded-xl overflow-hidden shadow bg-white w-full" style={{ aspectRatio: '11/9' }}>
+                      <img
+                        src={url}
+                        alt={`Galeria ${idx * columns + colIdx + 1}`}
+                        className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                        loading="lazy"
+                      />
                     </div>
-                  ))}
-                  {Array.from({ length: columns - group.length }).map((_, i) => (
-                    <div key={`placeholder-${i}`} className="flex-1 max-w-xs" />
-                  ))}
-                </div>
+                  </div>
+                ))}
+                {Array.from({ length: columns - group.length }).map((_, i) => (
+                  <div key={`placeholder-${i}`} className="flex-1 max-w-xs" />
+                ))}
               </div>
-            ))}
-          </Slider>
-        )}
+            </div>
+          ))}
+        </Slider>
       </div>
     </section>
   );

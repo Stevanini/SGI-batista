@@ -7,6 +7,27 @@ import { supabase } from '../../../services/supabaseClient';
 import type { Database } from '../../../interfaces/database.types';
 import styles from './Reflections.module.css';
 
+function ReflectionsSkeleton() {
+  return (
+    <section className="w-full py-16 bg-[#FCFAF6]">
+      <div className="container-1560 px-4 md:px-8">
+        <div className="h-10 w-48 bg-zinc-200 rounded mb-10 mx-auto animate-pulse" />
+        <div className="flex gap-4 justify-center">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white flex-1 rounded-2xl shadow-lg flex flex-col items-center px-8 py-8 min-h-[340px] max-w-xs animate-pulse">
+              <div className="w-10 h-10 rounded-full bg-zinc-200 mb-4" />
+              <div className="h-6 w-32 bg-zinc-200 rounded mb-2" />
+              <div className="h-4 w-40 bg-zinc-200 rounded mb-2" />
+              <div className="h-4 w-24 bg-zinc-200 rounded mb-2" />
+              <div className="h-14 w-14 rounded-full bg-zinc-200 mt-4" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Reflections() {
   const [reflections, setReflections] = useState<Database['public']['Tables']['reflexoes']['Row'][]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -48,9 +69,8 @@ export function Reflections() {
     customPaging: () => <span className="slick-dot-custom-black" />,
   };
 
-  if (loading) return <div>Carregando reflexões...</div>;
-  if (error) return <div>Erro ao carregar reflexões: {error}</div>;
-  if (!reflections.length) return <div>Nenhuma reflexão encontrada.</div>;
+  if (loading) return <ReflectionsSkeleton />;
+  if (!reflections.length) return null;
 
   return (
     <section className="w-full py-16 bg-[#FCFAF6]">
