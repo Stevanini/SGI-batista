@@ -202,14 +202,24 @@ const DashboardLayout = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               {isAdmin && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild tooltip="Usuários">
-                    <a href="/dashboard/usuarios">
-                      <Users />
-                      <span>Usuários</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Usuários">
+                      <a href="/dashboard/usuarios">
+                        <Users />
+                        <span>Usuários</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild tooltip="Controle de Caixa">
+                      <a href="/dashboard/caixa">
+                        <FileText />
+                        <span>Controle de Caixa</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
               )}
             </SidebarMenu>
           </SidebarContent>
