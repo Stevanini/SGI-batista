@@ -9,20 +9,23 @@ export const Information: React.FC = () => {
       <div className="bg-white shadow-lg rounded-xl w-full p-4 flex flex-wrap flex-col md:flex-row">
         <div className="p-4 flex gap-4 flex-col flex-1">
           <Widget icon={PiHandHeartDuotone} color="orange" description="Missões" />
-
-          <p className="text-zinc-400">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+          <p className="text-zinc-400">
+            Conheça e participe dos nossos projetos missionários, levando esperança e transformação para vidas em nossa cidade e além.
+          </p>
         </div>
 
         <div className="p-4 flex gap-4 flex-col flex-1">
           <Widget icon={IoBagHandle} color="blue" description="Bazar Missionário" />
-
-          <p className="text-zinc-400">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+          <p className="text-zinc-400">
+            Contribua com o nosso bazar missionário! Toda renda é revertida para apoiar ações sociais e missões da igreja.
+          </p>
         </div>
 
         <div className="p-4 flex gap-4 flex-col flex-1">
           <Widget icon={HiPhone} color="green" description="Fale Conosco" />
-
-          <p className="text-zinc-400">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+          <p className="text-zinc-400">
+            Precisa de oração, orientação ou deseja saber mais? Entre em contato conosco, estamos prontos para te ouvir e ajudar.
+          </p>
         </div>
       </div>
     </section>

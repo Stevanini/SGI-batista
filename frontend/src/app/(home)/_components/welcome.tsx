@@ -1,4 +1,4 @@
-import { CheckCircle } from 'lucide-react';
+import { CalendarCheck, Users } from 'lucide-react';
 
 export function Welcome() {
   return (
@@ -18,20 +18,19 @@ export function Welcome() {
         </span>
         <h2 className="text-5xl md:text-6xl font-extrabold text-zinc-900 mb-4 text-right font-serif">Batista Renovada</h2>
         <p className="text-zinc-400 text-base md:text-lg mb-6 text-right">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+          Venha celebrar conosco, participar dos nossos cultos e fazer parte desta grande família de amor.
         </p>
         <h3 className="text-xl font-bold text-zinc-900 mb-2 text-right">Dias de culto</h3>
         <ul className="space-y-2 text-right">
           <li className="flex items-center justify-end gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6">
-              <CheckCircle className="w-6 h-6 text-primary" strokeWidth={2.5} />
+              <CalendarCheck className="w-4 h-4 text-primary" strokeWidth={2.5} />
             </span>
             <span className="text-zinc-800">Culto de celebração - Domingo</span>
           </li>
           <li className="flex items-center justify-end gap-2">
             <span className="inline-flex items-center justify-center w-6 h-6">
-              <CheckCircle className="w-6 h-6 text-primary" strokeWidth={2.5} />
+            <CalendarCheck className="w-4 h-4 text-primary" strokeWidth={2.5} />
             </span>
             <span className="text-zinc-800">Culto das mulheres - Quinta Feira</span>
           </li>
