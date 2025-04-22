@@ -25,6 +25,9 @@ import {
   Menu,
   X,
   Users,
+  Wallet,
+  ShoppingBag,
+  Mail,
 } from "lucide-react";
 import UserApprovalManager from '@/pages/dashboard/UserApprovalManager';
 import { supabase } from '@/integrations/supabase/client';
@@ -172,7 +175,7 @@ const DashboardLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Bazar">
                   <a href="/dashboard/bazar">
-                    <FileText />
+                    <ShoppingBag />
                     <span>Bazar Missionário</span>
                   </a>
                 </SidebarMenuButton>
@@ -196,7 +199,7 @@ const DashboardLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Contato">
                   <a href="/dashboard/contato">
-                    <Settings />
+                    <Mail />
                     <span>Contato</span>
                   </a>
                 </SidebarMenuButton>
@@ -214,7 +217,7 @@ const DashboardLayout = () => {
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild tooltip="Controle de Caixa">
                       <a href="/dashboard/caixa">
-                        <FileText />
+                        <Wallet />
                         <span>Controle de Caixa</span>
                       </a>
                     </SidebarMenuButton>

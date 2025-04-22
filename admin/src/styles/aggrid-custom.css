@@ -1,0 +1,26 @@
+/* Bordas das linhas */
+.ag-theme-alpine .ag-row {
+  border-bottom: 1px solid #f3f4f6 !important;
+}
+
+/* Bordas laterais da tabela */
+.ag-theme-alpine .ag-root-wrapper,
+.ag-theme-alpine .ag-root {
+  border: none !important;
+}
+
+/* Bordas do header (incluindo topo) */
+.ag-theme-alpine .ag-header {
+  border-bottom: 1px solid #f3f4f6 !important;
+  border-top: 1px solid #f3f4f6 !important;
+}
+
+/* Borda superior da tabela (caso header não cubra) */
+.ag-theme-alpine .ag-root-wrapper {
+  border-top: 1px solid #f3f4f6 !important;
+}
+
+/* Borda superior da paginação */
+.ag-theme-alpine .ag-paging-panel {
+  border-top: 1px solid #f3f4f6 !important;
+} 

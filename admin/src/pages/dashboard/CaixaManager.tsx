@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Trash } from "lucide-react";
+import { Trash, Wallet } from "lucide-react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import "@/styles/aggrid-custom.css";
 import {
   ClientSideRowModelModule,
   ModuleRegistry,
@@ -206,6 +207,7 @@ export default function CaixaManager() {
     {
       headerName: "Ações",
       field: "id",
+      width: 90,
       cellRenderer: (p) => (
         <Button
           variant="ghost"
