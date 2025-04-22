@@ -5,7 +5,7 @@ const pattern =
 
 export function Mission() {
   return (
-    <section className="w-full py-16 bg-[#FCFAF6]">
+    <section id="missions" className="w-full py-16 bg-[#FCFAF6]">
       <div className="container-1560 flex flex-col md:flex-row items-center md:justify-between justify-center gap-8 px-4 md:px-8">
         {/* Esquerda */}
         <div className="flex-1 flex flex-col md:flex-row items-center md:items-start gap-8 max-w-3xl">

@@ -1,6 +1,6 @@
 export function Offers() {
   return (
-    <section className="relative w-full h-[320px] md:h-[380px] flex items-center justify-center overflow-hidden">
+    <section id="contribute" className="relative w-full h-[320px] md:h-[380px] flex items-center justify-center overflow-hidden">
       {/* Imagem de fundo */}
       <div
         className="absolute inset-0 bg-cover bg-center"

@@ -54,7 +54,7 @@ export const Gallery: React.FC = () => {
 
   return (
     <section className="w-full py-16 bg-[#FCFAF6]">
-      <div className="container-1560 px-4 md:px-8">
+      <div id="gallery" className="container-1560 px-4 md:px-8">
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-10 text-center font-serif">Galeria</h2>
         <Slider {...settings}>
           {slides.map((group, idx) => (

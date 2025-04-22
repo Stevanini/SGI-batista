@@ -23,7 +23,7 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <section className="w-full py-16 bg-white">
+    <section id="contact" className="w-full py-16 bg-white">
       <div className="container-1560 px-4 md:px-8 mx-auto">
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-10 text-center font-serif">Contato</h2>
         <div className="flex flex-col md:flex-row gap-8 bg-white rounded-2xl shadow overflow-hidden">

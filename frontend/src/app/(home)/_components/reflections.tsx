@@ -49,7 +49,7 @@ export function Reflections() {
 
   return (
     <section className="w-full py-16 bg-[#FCFAF6]">
-      <div className="container-1560 px-4 md:px-8">
+      <div id="reflections" className="container-1560 px-4 md:px-8">
         <span className="block text-center text-2xl mb-2" style={{ color: '#FF7A1A', fontFamily: 'Shadows Into Light, cursive' }}>
           Batista Renovada
         </span>

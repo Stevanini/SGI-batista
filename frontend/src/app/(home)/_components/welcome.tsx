@@ -3,6 +3,7 @@ import { CheckCircle } from 'lucide-react';
 export function Welcome() {
   return (
     <section
+      id="about"
       className="w-full flex justify-end items-center py-16 relative"
       style={{
         backgroundImage: 'url(/assets/img/background/bg-hands.webp)',
