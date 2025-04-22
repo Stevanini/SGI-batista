@@ -18,7 +18,7 @@ export const Footer: React.FC = () => {
             <span className="font-normal text-[10px] text-red-500 whitespace-nowrap mt-1 tracking-widest uppercase">Batista Renovada</span>
           </div>
           <p className="text-zinc-300 mb-6 max-w-xs text-center md:text-left">
-            Asting is a non-profit organization to support people worldwide and keep an eye in the future Support.
+            Venha celebrar conosco, participar dos nossos cultos e fazer parte desta grande família de amor.
           </p>
           <SocialLinks className="mt-2 mb-4" iconSize={24} />
         </div>
@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col gap-4 items-center md:items-start mb-8 md:mb-0">
           <h4 className="font-extrabold text-lg mb-2">Contribua</h4>
           <p className="text-zinc-300 mb-4 max-w-xs text-center md:text-left">
-            Com colaboradores e voluntários entusiasmados, estamos prontos para apoiar você a qualquer momento.
+            Sua oferta é um ato voluntário, um ato de amor e compromisso com a obra de Deus e a Igreja do Senhor.
           </p>
           <button className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full px-8 py-3 flex items-center gap-2 text-base transition shadow-md">
             <span className="text-xl">❤</span> Contribuir

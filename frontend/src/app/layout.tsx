@@ -5,8 +5,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'SGI',
-  description: 'Sistema de Gestão da Igreja',
+  title: 'Batista Renovada',
+  description: 'Batista Renovada',
 };
 
 export default function RootLayout({
