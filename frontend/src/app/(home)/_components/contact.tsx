@@ -2,12 +2,11 @@
 import { useForm } from 'react-hook-form';
 import { SocialLinks } from '~/components/atoms/SocialLinks';
 import { useContato } from '../../../hooks/useContato';
+import { useRef } from 'react';
 
 interface ContactFormData {
   name: string;
   email: string;
-  phone: string;
-  subject: string;
   message: string;
 }
 
@@ -20,9 +19,15 @@ export const Contact: React.FC = () => {
 
   const { contato, loading, error } = useContato();
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const onSubmit = (data: ContactFormData) => {
-    // Aqui você pode enviar os dados para uma API ou serviço de email
-    alert(JSON.stringify(data, null, 2));
+    if (!contato?.telefone) return;
+    const whatsappNumber = contato.telefone.replace(/\D/g, '');
+    const message = `Nome: ${data.name}\nEmail: ${data.email}\nMensagem: ${data.message}`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    window.open(whatsappLink, '_blank');
   };
 
   if (loading) return <div>Carregando contato...</div>;
@@ -35,7 +40,7 @@ export const Contact: React.FC = () => {
         <h2 className="text-4xl md:text-5xl font-extrabold text-zinc-900 mb-10 text-center font-serif">Contato</h2>
         <div className="flex flex-col md:flex-row gap-8 bg-white rounded-2xl shadow overflow-hidden">
           {/* Formulário */}
-          <form onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col gap-4 p-6 md:p-10">
+          <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col gap-4 p-6 md:p-10">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <input
@@ -55,22 +60,6 @@ export const Contact: React.FC = () => {
                 {errors.email && <span className="text-red-500 text-xs ml-2">{errors.email.message}</span>}
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <input
-                  {...register('phone')}
-                  placeholder="Phone number"
-                  className="w-full rounded-2xl bg-zinc-50 px-6 py-4 text-zinc-700 placeholder-zinc-400 outline-none border-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div className="flex-1">
-                <input
-                  {...register('subject')}
-                  placeholder="Subject"
-                  className="w-full rounded-2xl bg-zinc-50 px-6 py-4 text-zinc-700 placeholder-zinc-400 outline-none border-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-            </div>
             <textarea
               {...register('message', { required: 'Mensagem obrigatória' })}
               placeholder="Write message"
@@ -87,11 +76,11 @@ export const Contact: React.FC = () => {
           </form>
           {/* Informações de contato */}
           <div className="flex-1 bg-zinc-50 flex flex-col items-center justify-center gap-4 min-w-[260px] p-8">
-            <h3 className="text-lg font-bold mb-2">Address</h3>
+            <h3 className="text-lg font-bold mb-2">Endereço</h3>
             <p className="text-zinc-500">
               {contato.endereco}
             </p>
-            <h3 className="text-lg font-bold mt-4 mb-2">Phone</h3>
+            <h3 className="text-lg font-bold mt-4 mb-2">WhatsApp</h3>
             <p className="text-zinc-500">
               Local: {contato.telefone}
             </p>
@@ -101,7 +90,7 @@ export const Contact: React.FC = () => {
                 {contato.email}
               </a>
             </p>
-            <h3 className="text-lg font-bold mt-4">Follow</h3>
+            <h3 className="text-lg font-bold mt-4">Redes Sociais</h3>
             <SocialLinks className="mt-2 justify-center" iconSize={24} />
           </div>
         </div>
